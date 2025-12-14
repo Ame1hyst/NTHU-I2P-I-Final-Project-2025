@@ -1,0 +1,308 @@
+{
+  "map": [
+    {
+      "path": "map.tmx",
+      "teleport": [
+        {
+          "x": 24,
+          "y": 23,
+          "destination": "gym.tmx",
+          "dest_x": 12,
+          "dest_y": 12
+        },
+        {
+          "x": 16,
+          "y": 28,
+          "destination": "home.tmx",
+          "dest_x": 12,
+          "dest_y": 13
+        }
+      ],
+      "player": {
+        "x": 16.0,
+        "y": 30.0
+      },
+      "enemy_trainers": [
+        {
+          "x": 24.0,
+          "y": 29.0,
+          "classification": "stationary",
+          "facing": "DOWN",
+          "max_tiles": 2,
+          "img_path": "character/ow2.png",
+          "pokemon": [
+            [
+              "Capibarus",
+              60
+            ],
+            [
+              "Tancrest",
+              22
+            ]
+          ]
+        },
+        {
+          "x": 54.0,
+          "y": 16.0,
+          "classification": "stationary",
+          "facing": "LEFT",
+          "max_tiles": 2,
+          "img_path": "character/ow6.png",
+          "pokemon": [
+            [
+              "Lawnwyn",
+              10
+            ]
+          ]
+        },
+        {
+          "x": 31.0,
+          "y": 31.0,
+          "classification": "stationary",
+          "facing": "UP",
+          "max_tiles": 2,
+          "img_path": "character/ow7.png",
+          "pokemon": [
+            [
+              "Sapphireer",
+              20
+            ]
+          ]
+        }
+      ],
+      "healing_statue": {
+        "x": 10,
+        "y": 24,
+        "img_path": "krajua/healing_prai.png"
+      }
+    },
+    {
+      "path": "gym.tmx",
+      "teleport": [
+        {
+          "x": 11,
+          "y": 12,
+          "destination": "map.tmx",
+          "dest_x": 23,
+          "dest_y": 24
+        },
+        {
+          "x": 12,
+          "y": 14,
+          "destination": "map.tmx",
+          "dest_x": 24,
+          "dest_y": 24
+        },
+        {
+          "x": 13,
+          "y": 14,
+          "destination": "map.tmx",
+          "dest_x": 25,
+          "dest_y": 24
+        }
+      ],
+      "player": {
+        "x": 12.0,
+        "y": 12.0
+      },
+      "enemy_trainers": []
+    },
+    {
+      "path": "home.tmx",
+      "teleport": [
+        {
+          "x": 11,
+          "y": 14,
+          "destination": "map.tmx",
+          "dest_x": 16,
+          "dest_y": 29
+        },
+        {
+          "x": 12,
+          "y": 14,
+          "destination": "map.tmx",
+          "dest_x": 16,
+          "dest_y": 29
+        },
+        {
+          "x": 13,
+          "y": 14,
+          "destination": "map.tmx",
+          "dest_x": 16,
+          "dest_y": 29
+        }
+      ],
+      "player": {
+        "x": 12.0,
+        "y": 10.0
+      },
+      "enemy_trainers": [],
+      "npc_shop": {
+        "x": 22.0,
+        "y": 12.0,
+        "facing": "LEFT",
+        "max_tiles": 2,
+        "img_path": "character/ow2.png",
+        "shop_items": {
+          "0": {
+            "name": "pokeball",
+            "count": 10,
+            "price": 1152,
+            "img_path": "ingame_ui/ball.png"
+          },
+          "1": {
+            "name": "dfs decrease",
+            "count": 9,
+            "price": 676,
+            "img_path": "ingame_ui/options2.png"
+          },
+          "2": {
+            "name": "potion",
+            "count": -1,
+            "price": 494,
+            "img_path": "ingame_ui/potion.png"
+          },
+          "3": {
+            "name": "attack buff",
+            "count": 7,
+            "price": 538,
+            "img_path": "ingame_ui/options1.png"
+          }
+        },
+        "shop_pokemon": {
+          "0": {
+            "name": "Sapphireer",
+            "level": 29,
+            "price": 3000,
+            "sold": false
+          },
+          "1": {
+            "name": "Peridox",
+            "level": 5,
+            "price": 600,
+            "sold": false
+          },
+          "2": {
+            "name": "Hummi",
+            "level": 20,
+            "price": 2100,
+            "sold": false
+          },
+          "3": {
+            "name": "Sapphireer",
+            "level": 28,
+            "price": 2900,
+            "sold": false
+          }
+        },
+        "reset_count": 0
+      }
+    }
+  ],
+  "current_map": "map.tmx",
+  "player": {
+    "x": 11.076361615182474,
+    "y": 28.757131167804214
+  },
+  "bag": {
+    "monsters": [
+      {
+        "name": "Lawnwyn",
+        "hp": 100,
+        "max_hp": 100,
+        "level": 25,
+        "exp": 1524,
+        "sprite_path": "menu_sprites/menusprite1.png"
+      },
+      {
+        "name": "Lawnverdant",
+        "hp": 180,
+        "max_hp": 180,
+        "level": 48,
+        "exp": 1862
+      },
+      {
+        "name": "Lawnverdant",
+        "hp": 180,
+        "max_hp": 180,
+        "level": 51,
+        "exp": 2055
+      },
+      {
+        "name": "Capibarus",
+        "hp": 180,
+        "max_hp": 180,
+        "level": 30,
+        "exp": 0
+      },
+      {
+        "name": "Hummi",
+        "hp": 3,
+        "max_hp": 120,
+        "level": 34,
+        "exp": 633
+      },
+      {
+        "name": "Sapphireer",
+        "hp": 170,
+        "max_hp": 170,
+        "level": 40,
+        "exp": 0
+      },
+      {
+        "name": "Lawnverdant",
+        "hp": 180,
+        "max_hp": 180,
+        "level": 73,
+        "exp": 0
+      },
+      {
+        "name": "Pyrrhidot",
+        "hp": 150,
+        "max_hp": 150,
+        "level": 87,
+        "exp": 0
+      },
+      {
+        "name": "Drevran",
+        "hp": 200,
+        "max_hp": 200,
+        "level": 67,
+        "exp": 0
+      },
+      {
+        "name": "Drevran",
+        "hp": 200,
+        "max_hp": 200,
+        "level": 77
+      }
+    ],
+    "items": [
+      {
+        "name": "Coins",
+        "count": 10284,
+        "sprite_path": "ingame_ui/coin.png"
+      },
+      {
+        "name": "Potion",
+        "count": 23,
+        "sprite_path": "ingame_ui/potion.png"
+      },
+      {
+        "name": "Pokeball",
+        "count": 6,
+        "sprite_path": "ingame_ui/ball.png"
+      },
+      {
+        "name": "DFS Decrease",
+        "count": 0,
+        "sprite_path": "ingame_ui/options2.png"
+      },
+      {
+        "name": "Attack Buff",
+        "count": 4,
+        "sprite_path": "ingame_ui/options1.png"
+      }
+    ]
+  }
+}

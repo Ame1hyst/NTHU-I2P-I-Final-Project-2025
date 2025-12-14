@@ -1,0 +1,269 @@
+{
+  "pokemons": {
+    "Lawnwyn": {
+      "stats": {
+        "element": "grass",
+        "max_hp": 100,
+        "attack": 5,
+        "defense": 6
+      },
+      "abilities": ["scratch", "bite", "leaf blade", "vine whip"],
+      "evolve": ["Lawngrove", 30]
+    },
+    "Lawngrove": {
+      "stats": {
+        "element": "grass",
+        "max_hp": 140,
+        "attack": 9,
+        "defense": 11
+      },
+      "abilities": ["scratch", "bite", "leaf blade", "vine whip"],
+      "evolve": ["Lawnverdant", 40]
+    },
+    "Lawnverdant": {
+      "stats": {
+        "element": "grass",
+        "max_hp": 180,
+        "attack": 13,
+        "defense": 16
+      },
+      "abilities": ["scratch", "bite", "leaf blade", "vine whip"],
+      "evolve": null
+    },
+    "Capibarus": {
+      "stats": {
+        "element": "rock",
+        "max_hp": 180,
+        "attack": 11,
+        "defense": 18
+      },
+      "abilities": ["scratch", "tackle", "punch", "rock slide"],
+      "evolve": null
+    },
+    "Hummi": {
+      "stats": {
+        "element": "flying",
+        "max_hp": 120,
+        "attack": 8,
+        "defense": 7
+      },
+      "abilities": ["scratch", "tackle", "quick attack", "gust"],
+      "evolve": null
+    },
+    "Sapphireer": {
+      "stats": {
+        "element": "water",
+        "max_hp": 170,
+        "attack": 7,
+        "defense": 10
+      },
+      "abilities": ["scratch", "water gun", "splash", "heal"],
+      "evolve": null
+    },
+    "Mocon": {
+      "stats": {
+        "element": "fire",
+        "max_hp": 110,
+        "attack": 6,
+        "defense": 5
+      },
+      "abilities": ["scratch", "tackle", "quick attack", "fire blast"],
+      "evolve": ["Tancrest", 20]
+    },
+    "Tancrest": {
+      "stats": {
+        "element": "fire",
+        "max_hp": 150,
+        "attack": 10,
+        "defense": 10
+      },
+      "abilities": ["scratch", "tackle", "quick attack", "fire blast"],
+      "evolve": ["Drevran", 30]
+    },
+    "Drevran": {
+      "stats": {
+        "element": "fire",
+        "max_hp": 200,
+        "attack": 14,
+        "defense": 15
+      },
+      "abilities": ["scratch", "tackle", "quick attack", "fire blast"],
+      "evolve": null
+    },
+    "Pastelrox": {
+      "stats": {
+        "element": "ground",
+        "max_hp": 180,
+        "attack": 12,
+        "defense": 14
+      },
+      "abilities": ["scratch", "tackle", "punch", "confuse"],
+      "evolve": null
+    },
+    "Mauveriss": {
+      "stats": {
+        "element": "ground",
+        "max_hp": 160,
+        "attack": 10,
+        "defense": 12
+      },
+      "abilities": ["scratch", "bite", "tackle", "confuse"],
+      "evolve": null
+    },
+    "Azuron": {
+      "stats": {
+        "element": "water",
+        "max_hp": 130,
+        "attack": 5,
+        "defense": 6
+      },
+      "abilities": ["scratch", "quick attack", "splash", "water gun"],
+      "evolve": ["Aqualin", 25]
+    },
+    "Aqualin": {
+      "stats": {
+        "element": "water",
+        "max_hp": 160,
+        "attack": 9,
+        "defense": 10
+      },
+      "abilities": ["scratch", "quick attack", "splash", "water gun"],
+      "evolve": ["Aquaris", 35]
+    },
+    "Aquaris": {
+      "stats": {
+        "element": "water",
+        "max_hp": 200,
+        "attack": 13,
+        "defense": 14
+      },
+      "abilities": ["scratch", "quick attack", "splash", "water gun"],
+      "evolve": null
+    },
+    "Peridox": {
+      "stats": {
+        "element": "grass",
+        "max_hp": 110,
+        "attack": 5,
+        "defense": 6
+      },
+      "abilities": ["scratch", "quick attack", "peak", "leaf blade"],
+      "evolve": ["Pyrrhidot", 15]
+    },
+    "Pyrrhidot": {
+      "stats": {
+        "element": "grass",
+        "max_hp": 150,
+        "attack": 9,
+        "defense": 11
+      },
+      "abilities": ["scratch", "quick attack", "peak", "leaf blade"],
+      "evolve": null
+    }
+  },
+  "attacks": {
+    "bite": {
+      "element": "dark",
+      "damage": 12,
+      "target": "opponent"
+    },
+    "leaf blade": {
+      "element": "grass",
+      "damage": 25,
+      "target": "opponent"
+    },
+    "vine whip": {
+      "element": "grass",
+      "damage": 20,
+      "target": "opponent"
+    },
+    "peak": {
+      "element": "grass",
+      "damage": 15,
+      "target": "opponent"
+    },
+    "rock slide": {
+      "element": "rock",
+      "damage": 25,
+      "target": "opponent"
+    },
+    "punch": {
+      "element": "fighting",
+      "damage": 15,
+      "target": "opponent"
+    },
+    "quick attack": {
+      "element": "normal",
+      "damage": 15,
+      "target": "opponent"
+    },
+    "gust": {
+      "element": "flying",
+      "damage": 20,
+      "target": "opponent"
+    },
+    "splash": {
+      "element": "water",
+      "damage": 10,
+      "target": "opponent"
+    },
+    "water gun": {
+      "element": "water",
+      "damage": 20,
+      "target": "opponent"
+    },
+    "heal": {
+      "element": "water",
+      "damage": -20,
+      "target": "player"
+    },
+    "fire blast": {
+      "element": "fire",
+      "damage": 22,
+      "target": "opponent"
+    },
+    "confuse": {
+      "element": "ground",
+      "damage": 15,
+      "target": "opponent"
+    },
+    "scratch": {
+      "element": "normal",
+      "damage": 8,
+      "target": "opponent"
+    },
+    "tackle": {
+      "element": "normal",
+      "damage": 12,
+      "target": "opponent"
+    }
+  },
+  "sprites": {
+    "Lawnwyn": "menu_sprites/menusprite1.png",
+    "Lawngrove": "menu_sprites/menusprite2.png",
+    "Lawnverdant": "menu_sprites/menusprite3.png",
+    "Capibarus": "menu_sprites/menusprite4.png",
+    "Hummi": "menu_sprites/menusprite5.png",
+    "Sapphireer": "menu_sprites/menusprite6.png",
+    "Mocon": "menu_sprites/menusprite7.png",
+    "Tancrest": "menu_sprites/menusprite8.png",
+    "Drevran": "menu_sprites/menusprite9.png",
+    "Pastelrox": "menu_sprites/menusprite10.png",
+    "Mauveriss": "menu_sprites/menusprite11.png",
+    "Azuron": "menu_sprites/menusprite12.png",
+    "Aqualin": "menu_sprites/menusprite13.png",
+    "Aquaris": "menu_sprites/menusprite14.png",
+    "Peridox": "menu_sprites/menusprite15.png",
+    "Pyrrhidot": "menu_sprites/menusprite16.png"
+  },
+"element_weakness": {
+    "grass": ["fire", "flying"],
+    "fire": ["water", "rock"],
+    "water": ["grass", "rock"],
+    "rock": ["water", "grass"],
+    "ground": ["water", "grass"],
+    "flying": ["rock", "ground"],
+    "dark": ["fighting", "ground"],
+    "fighting": ["flying", "dark"]
+  }
+}
