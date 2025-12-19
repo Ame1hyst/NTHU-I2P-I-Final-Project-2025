@@ -1,5 +1,4 @@
 import pygame as pg
-from src.core.managers import GameManager
 from src.core.services import resource_manager, input_manager, scene_manager
 from src.utils import PositionCamera, GameSettings
 from src.interface.components.dialog import Dialog

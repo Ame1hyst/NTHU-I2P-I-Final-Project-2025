@@ -3,9 +3,8 @@ from src.utils import GameSettings
 from src.scenes.scene import Scene
 from src.sprites import BackgroundSprite
 from src.interface.components import Button
-from src.core.managers import GameManager
+from src.core.managers import GameManager, AchieveManager
 from src.core.services import scene_manager, sound_manager, input_manager, resource_manager
-from src.sprites.animation import Animation
 from typing import override
 import random
 
@@ -13,6 +12,7 @@ class MiniGame(Scene):
     def __init__(self):
         super().__init__()
         self.game_manager = None
+        self.achievement_manager = AchieveManager()
         self.state = "show"
         self.healed = False
 
@@ -23,7 +23,7 @@ class MiniGame(Scene):
         self.speed = 10
 
         #Game set
-        self.correct = 3
+        self.correct = 0
         self.chance = 3
         self.ran_direction = []
         self.q_direction = []
@@ -108,10 +108,13 @@ class MiniGame(Scene):
                 surf =list(self.animation_surfs.values())[self.ani_idx]
                 rect = surf.get_rect(center=self.background.rect.center)
                 screen.blit(surf, (rect.x-50, rect.y))
+                
 
                 if  not self.healed:
                     self.game_manager.bag.heal_all()
                     auto_save.force_save()
+                    self.achievement_manager.add_heal_count()
+                    self.healed = True
                 
                     
     @override

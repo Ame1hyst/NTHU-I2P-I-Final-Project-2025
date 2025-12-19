@@ -12,6 +12,7 @@ from src.scenes.battle_scene import BattleScene
 from src.data.bag import Bag
 from src.scenes.minigame_scene import MiniGame
 from src.scenes.shop_scene import ShopScene
+from src.scenes.achievement import AchievementSCene
 
 class Engine:
 
@@ -39,6 +40,7 @@ class Engine:
         scene_manager.register_scene("bag", Bag())
         scene_manager.register_scene('minigame', MiniGame())
         scene_manager.register_scene('shop', ShopScene())
+        scene_manager.register_scene('achievement', AchievementSCene())
         
         scene_manager.change_scene("menu")
 

@@ -1,5 +1,5 @@
 from src.interface.components.dialog import Dialog
-from src.core.managers import PokemonManager
+from src.core.managers import PokemonManager, AchieveManager
 import random
 
 class ActionHandle:
@@ -19,6 +19,8 @@ class ActionHandle:
         self.poke_info = PokemonManager.get_pokemons()
         self.bush = False
         self.catching = False
+
+        self.achievement_manager = AchieveManager()
 
     # --State Handle--
     def handle_menu(self):
@@ -68,7 +70,11 @@ class ActionHandle:
 
             texts.append(f"{team_name} sent {team_dict[next_pokemon].pokemon}")
         else:
+            if team_name == 'Enemy':
+                self.achievement_manager.defeated_boss()
+            
             texts.extend([f"All {team_name} Pokemon Down", "Press space to quit"])
+
 
         return texts    
 
@@ -149,6 +155,8 @@ class ActionHandle:
                 coins_count = self.battle_logic.calculate_coins_count(catch_pokemon)
                 self.scene.game_manager.bag.items_data[0]['count'] += coins_count
                 
+                self.achievement_manager.add_caught_pokemon(catch_pokemon.pokemon)
+
                 self.dialog.add_sequence(["Pokemon caught!", f"Player receive {coins_count}", "Press space to quit"])
                 break
             

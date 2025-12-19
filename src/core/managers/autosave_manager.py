@@ -4,7 +4,6 @@ from src.core.managers import GameManager
 import copy
 import json, os
 import pygame as pg
-from typing import TYPE_CHECKING
 class AutoSaveManager:
     def __init__(self, game_manager:GameManager, path="saves/game0.json"):
         self.game_manager = game_manager

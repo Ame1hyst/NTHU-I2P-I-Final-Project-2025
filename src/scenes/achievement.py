@@ -1,0 +1,130 @@
+import pygame as pg
+
+from src.utils import GameSettings
+from src.sprites import BackgroundSprite
+from src.scenes.scene import Scene
+from src.interface.components import Button
+from src.core.managers import GameManager, AchieveManager
+from src.core.services import scene_manager, sound_manager, input_manager, resource_manager
+from src.interface.components.dialog import Dialog
+from typing import override
+
+
+class AchievementSCene(Scene):
+    def __init__(self):
+        self.game_manager = GameManager.get_instance()
+        self.ui_setup()
+        
+        am_manager = AchieveManager()
+        self.progress = am_manager.progress
+        self.achievement_data = am_manager.achievement_data
+
+        self.img_render = []
+        self.current_rect = None
+
+    def ui_setup(self):
+        #Button asset setup
+        self.background = BackgroundSprite("krajua/stamp_banner.png", size=(GameSettings.SCREEN_WIDTH*0.75, GameSettings.SCREEN_HEIGHT*0.8), cpos=(GameSettings.SCREEN_WIDTH *0.13, GameSettings.SCREEN_HEIGHT* 0.1))
+        self.x_button = Button(
+            "UI/button_x.png", "UI/button_x_hover.png",
+            self.background.rect.right-60, self.background.rect.top +20, 35, 35,
+            lambda: scene_manager.change_scene(scene_manager.previous_screen_name))
+
+        self.large_font = resource_manager.get_font('Minecraft.ttf', 20)
+        self.mid_font = resource_manager.get_font('Minecraft.ttf', 15)
+        self.small_font = resource_manager.get_font('Minecraft.ttf', 10)
+
+        #Text warning
+        self.dialog_surf = resource_manager.get_image('krajua/text_banner02.png',(200, 60))
+        self.dialog_rect = None
+        self.dialog = None
+
+    
+  
+    @override
+    def enter(self) -> None:
+        self.render_achieve_pic()
+       
+    @override
+    def exit(self) -> None:
+        self.reset()
+        
+    @override
+    def update(self, dt: float):
+        self.x_button.update(dt)
+   
+        hovered_rect = None # For one time render
+        hovered_achievement = None
+        
+        for achievement, _, rect in self.img_render:
+            if rect.collidepoint(input_manager.mouse_pos):
+                hovered_rect = rect
+                hovered_achievement = achievement
+                break
+        else:
+            self.reset()
+
+        if hovered_rect != self.current_rect:
+            self.current_rect = hovered_rect
+            if self.current_rect:
+                self.render_text(hovered_achievement, self.current_rect)
+            else:
+                self.dialog = None
+
+        if self.dialog and self.dialog.current_text:
+            self.dialog.update(dt)
+    
+    @override
+    def draw(self, screen: pg.Surface):
+        screen.blit(scene_manager.previous_screen_surf, (0,0))
+        overlay = pg.Surface((screen.get_size()), pg.SRCALPHA)
+        overlay.fill((0, 0, 0, 128))
+        screen.blit(overlay, (0,0))
+        
+        self.background.draw(screen)
+
+        self.x_button.draw(screen)
+
+        for achievement, img, rect in self.img_render:
+            if achievement in self.progress.get("unlocked", []):
+                screen.blit(img, rect)
+            pg.draw.rect(screen, "red", rect, 2)
+       
+        self.draw_text(screen)
+       
+    
+    def render_text(self, achievement, rect):
+        self.dialog_rect = self.dialog_surf.get_rect(midbottom=(rect.right + 5 , rect.centery))
+        
+        self.dialog = Dialog(self.dialog_rect, (20,15), speed=20, size=15, color="Black",)
+        
+        unlocked = achievement in  self.progress.get("unlocked", [])
+        data = self.achievement_data[achievement]
+        text = data['hint_unlocked'] if unlocked else data['hint_locked']
+        if not self.dialog.current_text:
+            self.dialog.add_sequence(text)     
+        self.dialog.add_sequence(text)
+
+        
+    
+    def draw_text(self, screen,):
+        if not self.dialog or not self.current_rect:
+            return            
+        screen.blit(self.dialog_surf, self.dialog_rect)
+        self.dialog.draw(screen)
+
+        
+
+
+    def render_achieve_pic(self):
+        self.img_render.clear()
+        for achievement, data in self.achievement_data.items():
+            img = resource_manager.get_image(data['sprite_path'])
+            img = pg.transform.scale(img, (200, 200))
+            x, y = data['pos']
+            rect = img.get_rect(center=(x, y))
+            self.img_render.append((achievement, img, rect))
+    
+    def reset(self):
+        self.current_rect = None
+        self.dialog = None

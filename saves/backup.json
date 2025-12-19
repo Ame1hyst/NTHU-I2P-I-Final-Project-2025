@@ -19,9 +19,26 @@
         }
       ],
       "player": {
-        "x": 16.0,
-        "y": 30.0
+        "x": 16,
+        "y": 30
       },
+      "pham_located": [
+        {
+          "id": 1,
+          "x": 8,
+          "y": 6
+        },
+        {
+          "id": 2,
+          "x": 57,
+          "y": 31
+        },
+        {
+          "id": 3,
+          "x": 48,
+          "y": 10
+        }
+      ],
       "enemy_trainers": [
         {
           "x": 24.0,
@@ -102,10 +119,36 @@
         }
       ],
       "player": {
-        "x": 12.0,
-        "y": 12.0
+        "x": 12,
+        "y": 12
       },
-      "enemy_trainers": []
+      "pham_located": [
+        {
+          "id": 4,
+          "x": 21,
+          "y": 13
+        }
+      ],
+      "enemy_trainers": [
+        {
+          "x": 12.0,
+          "y": 8.0,
+          "classification": "stationary",
+          "facing": "DOWN",
+          "max_tiles": 2,
+          "img_path": "character/ow7.png",
+          "pokemon": [
+            [
+              "Capibarus",
+              100
+            ],
+            [
+              "Lawnverdant",
+              150
+            ]
+          ]
+        }
+      ]
     },
     {
       "path": "home.tmx",
@@ -133,9 +176,16 @@
         }
       ],
       "player": {
-        "x": 12.0,
-        "y": 10.0
+        "x": 12,
+        "y": 10
       },
+      "pham_located": [
+        {
+          "id": 5,
+          "x": 8,
+          "y": 7
+        }
+      ],
       "enemy_trainers": [],
       "npc_shop": {
         "x": 22.0,
@@ -145,64 +195,64 @@
         "img_path": "character/ow2.png",
         "shop_items": {
           "0": {
-            "name": "potion",
-            "count": 9,
-            "price": 619,
-            "img_path": "ingame_ui/potion.png"
-          },
-          "1": {
             "name": "pokeball",
-            "count": 6,
-            "price": 518,
+            "count": 10,
+            "price": 1152,
             "img_path": "ingame_ui/ball.png"
           },
+          "1": {
+            "name": "dfs decrease",
+            "count": 8,
+            "price": 676,
+            "img_path": "ingame_ui/options2.png"
+          },
           "2": {
+            "name": "potion",
+            "count": -1,
+            "price": 494,
+            "img_path": "ingame_ui/potion.png"
+          },
+          "3": {
             "name": "attack buff",
             "count": 7,
-            "price": 364,
+            "price": 538,
             "img_path": "ingame_ui/options1.png"
           }
         },
         "shop_pokemon": {
           "0": {
-            "name": "Mocon",
-            "level": 12,
-            "price": 1300,
+            "name": "Sapphireer",
+            "level": 29,
+            "price": 3000,
             "sold": false
           },
           "1": {
-            "name": "Sapphireer",
-            "level": 11,
-            "price": 1200,
-            "sold": false
-          },
-          "2": {
-            "name": "Hummi",
-            "level": 15,
-            "price": 1600,
-            "sold": false
-          },
-          "3": {
-            "name": "Capibarus",
+            "name": "Peridox",
             "level": 5,
             "price": 600,
             "sold": false
           },
-          "4": {
-            "name": "Pastelrox",
-            "level": 14,
-            "price": 1500,
+          "2": {
+            "name": "Hummi",
+            "level": 20,
+            "price": 2100,
+            "sold": false
+          },
+          "3": {
+            "name": "Sapphireer",
+            "level": 28,
+            "price": 2900,
             "sold": true
           }
         },
-        "reset_count": 3
+        "reset_count": 0
       }
     }
   ],
-  "current_map": "home.tmx",
+  "current_map": "map.tmx",
   "player": {
-    "x": 16.66727330342793,
-    "y": 10.803273303427925
+    "x": 14.578125,
+    "y": 25.625
   },
   "bag": {
     "monsters": [
@@ -215,18 +265,18 @@
         "sprite_path": "menu_sprites/menusprite1.png"
       },
       {
-        "name": "Lawnverdant",
+        "name": "Lawngrove",
         "hp": 180,
         "max_hp": 180,
-        "level": 48,
-        "exp": 428
+        "level": 38,
+        "exp": 0
       },
       {
         "name": "Lawnverdant",
         "hp": 180,
         "max_hp": 180,
-        "level": 42,
-        "exp": 0
+        "level": 58,
+        "exp": 2711
       },
       {
         "name": "Capibarus",
@@ -239,8 +289,8 @@
         "name": "Hummi",
         "hp": 120,
         "max_hp": 120,
-        "level": 31,
-        "exp": 251
+        "level": 34,
+        "exp": 633
       },
       {
         "name": "Sapphireer",
@@ -260,32 +310,40 @@
         "name": "Pyrrhidot",
         "hp": 150,
         "max_hp": 150,
+        "level": 94,
+        "exp": 226
+      },
+      {
+        "name": "Drevran",
+        "hp": 200,
+        "max_hp": 200,
         "level": 87,
-        "exp": 0
+        "exp": 2715
       },
       {
         "name": "Drevran",
         "hp": 200,
         "max_hp": 200,
-        "level": 67,
-        "exp": 0
+        "level": 79,
+        "exp": 5859
       },
       {
-        "name": "Drevran",
-        "hp": 200,
-        "max_hp": 200,
-        "level": 77
+        "name": "Sapphireer",
+        "hp": 170,
+        "max_hp": 170,
+        "level": 28,
+        "exp": 0
       }
     ],
     "items": [
       {
         "name": "Coins",
-        "count": 30000,
+        "count": 14267,
         "sprite_path": "ingame_ui/coin.png"
       },
       {
         "name": "Potion",
-        "count": 7,
+        "count": 17,
         "sprite_path": "ingame_ui/potion.png"
       },
       {
@@ -295,14 +353,16 @@
       },
       {
         "name": "DFS Decrease",
-        "count": 2,
-        "sprite_path": "ingame_ui/options2.png"
+        "count": 5,
+        "sprite_path": "ingame_ui/options1.png"
       },
       {
         "name": "Attack Buff",
-        "count": 4,
-        "sprite_path": "ingame_ui/options1.png"
+        "count": 5,
+        "sprite_path": "ingame_ui/options2.png"
       }
     ]
-  }
+  },
+  "achievement": {},
+  "day_time": 22.660799999992786
 }

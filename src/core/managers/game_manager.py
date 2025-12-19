@@ -1,5 +1,6 @@
 from __future__ import annotations
 from src.utils import Logger, GameSettings, Position, Teleport
+from src.additional.day_night_cycle import DayNightCycle
 import json, os
 import pygame as pg
 from typing import TYPE_CHECKING
@@ -9,6 +10,7 @@ if TYPE_CHECKING:
     from src.entities.player import Player
     from src.entities.enemy_trainer import EnemyTrainer
     from src.data.bag import Bag
+    
 
 class GameManager:
     _instance = None
@@ -31,7 +33,9 @@ class GameManager:
                  player_spwans: dict[str, Position],
                  enemy_trainers: dict[str, list[EnemyTrainer]], 
                  bag: Bag | None = None,
-                 healing_statue = {}):
+                 healing_statue = {},
+                 achievement = {},
+                 day_time:float = None):
                      
         from src.data.bag import Bag
         # Game Properties
@@ -41,7 +45,15 @@ class GameManager:
         self.player_spawns = player_spwans
         self.enemy_trainers = enemy_trainers
         self.bag = bag if bag is not None else Bag([], [])
-        self.healing_statue = healing_statue or {}
+        
+        #Additional
+        self.healing_statue = healing_statue or {} #healing
+        self.achievement = achievement # Achievement
+        
+        self.day_time = day_time
+        self.day_state = "day"
+        self.day_night_cycle = DayNightCycle(self)
+
 
         #Battle team
         self.player_team_idx = []
@@ -77,6 +89,10 @@ class GameManager:
                 trainer.set_scale(scale)  
         if self.current_map.npc_shop:
             self.current_map.npc_shop.set_scale(scale)
+    def get_tile_size(self): # for scale change
+        if self.current_map_key == 'home.tmx':
+            return GameSettings.TILE_SIZE * 2
+        return GameSettings.TILE_SIZE  
     
     def switch_map(self, tp: Teleport) -> None:
         if tp.destination not in self.maps:
@@ -93,7 +109,7 @@ class GameManager:
             self.next_map = ""
             self.should_change_scene = False
             if self.player:
-                self.player.position = self.next_teleport.dest_pos
+                self.player.position = self.next_teleport.dest_pos # go to dest pos
                 #Collision Update
                 self.player.x = self.player.position.x
                 self.player.y = self.player.position.y
@@ -113,6 +129,7 @@ class GameManager:
             entity = self.current_map.npc_shop
             if rect.colliderect(entity.animation.rect):
                 return True
+            
         
         return False
     
@@ -185,6 +202,8 @@ class GameManager:
             "current_map": self.current_map_key,
             "player": self.player.to_dict() if self.player is not None else None,
             "bag": self.bag.to_dict(),
+            "achievement": self.achievement,
+            "day_time": self.day_time
         }
 
     @classmethod
@@ -193,6 +212,7 @@ class GameManager:
         from src.entities.player import Player
         from src.entities.enemy_trainer import EnemyTrainer
         from src.data.bag import Bag
+        from src.additional.day_night_cycle import DayNightCycle
         
         Logger.info("Loading maps")
         maps_data = data["map"]
@@ -216,7 +236,8 @@ class GameManager:
             {},
             trainers,
             bag=None,
-            healing_statue = {}
+            healing_statue = {},
+            day_time = None
         )
         gm.current_map_key = current_map
         
@@ -227,11 +248,18 @@ class GameManager:
                 gm.enemy_trainers[m["path"]] = [EnemyTrainer.from_dict(t, gm) for t in raw_data]
             
             gm.healing_statue[m["path"]] = m.get('healing_statue', None) # Load statue
+            
+            #Load npc shop
             npc_data = m.get("npc_shop", None)
-            Logger.info(f"Loading NPC for {m['path']}: {npc_data}")  
+            Logger.info(f"Loading NPC for {m['path']}")  
             if npc_data:
                 from src.entities.npc import NPC
                 gm.maps[m["path"]].npc_shop = NPC.from_dict(npc_data, gm)
+            
+            #Load achievement_data
+
+            #Load day data
+            gm.day_time = data.get("day_time", 8.00)
         
         Logger.info("Loading Player")
         if data.get("player"):

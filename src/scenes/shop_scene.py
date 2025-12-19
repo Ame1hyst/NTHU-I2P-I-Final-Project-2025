@@ -27,12 +27,15 @@ class ShopScene(Scene):
         self.pokemon_rect = []
         self.item_rect = []
         self.reset_count = 3
+        self.day_reset = False
 
         self.selected_idx = None
         self.selected_type = None
         self.selected_surf = None
         self.selected_rect = None
         self.ui_setup()
+
+        self.cycle = self.game_manager.day_night_cycle
         
 
     def ui_setup(self):
@@ -94,8 +97,10 @@ class ShopScene(Scene):
 
         self.render_shop_pokemons()
         self.render_shop_item()
+        
 
-
+        self.previous_daystate = self.cycle.day_state
+    
     @override
     def exit(self) -> None:
         self.npc_shop.shop_items = self.shop_items
@@ -116,6 +121,10 @@ class ShopScene(Scene):
         self.render_buy_overlay()
         if self.confirm_button:
             self.confirm_button.update(dt)
+        
+        self.reset_per_day()
+
+
     
     @override
     def draw(self, screen: pg.Surface) -> None:
@@ -276,7 +285,7 @@ class ShopScene(Scene):
 # --Logic part--
     def can_buy(self, item=None, pokemon=None):
         if item:
-            return self.coins_count >= item['price'] and item['count'] >= 0
+            return self.coins_count >= item['price'] and item['count'] > 0
         
         elif pokemon:
             return not pokemon['sold'] and self.coins_count >= pokemon['price']
@@ -383,3 +392,12 @@ class ShopScene(Scene):
             self.selected_idx = None
             self.selected_type = None
     
+    def reset_per_day(self):
+        if 7 <=self.cycle.get_hours() <=12 and not self.day_reset:
+            self.current_page = 0
+            self.reset_count = 3
+            self.day_reset = True
+
+        else:
+            self.day_reset = False 
+

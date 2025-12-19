@@ -112,6 +112,8 @@ class BattleScene(Scene):
             self.action_handle.current_player = None
             self.action_handle.reset_enemy()
             
+            
+            
     @override
     def update(self, dt: float):
         # Update buttons based on state
@@ -187,7 +189,7 @@ class BattleScene(Scene):
         
         # Bush Pokemon (wild)
         if all(not enemy.detected for enemy in self.game_manager.current_enemy_trainers):
-            pokemon, level = self.pm.get_rendom_pokemon()
+            pokemon, level = self.pm.get_rendom_pokemon(self.game_manager.day_state)
             pokemon_data = Pokemon(
                 pokemon=pokemon,
                 hp=self.pokemon_data[pokemon]['stats']['max_hp'],

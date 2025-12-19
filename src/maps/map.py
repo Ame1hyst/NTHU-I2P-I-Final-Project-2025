@@ -37,6 +37,8 @@ class Map:
 
         self.healing_statue = None
         self.npc_shop = None
+        
+        self.pham_located = None
 
     def update(self, dt: float, player):
         if self.healing_statue:
@@ -82,6 +84,9 @@ class Map:
                 return tp
         return None        
     
+    def get_obj(self, obj_name): # get obj from name
+        return self.tmxdata.get_object_by_name(obj_name)
+
     def _render_all_layers(self, target: pg.Surface) -> None:
         for layer in self.tmxdata.visible_layers:
             if isinstance(layer, pytmx.TiledTileLayer):
@@ -119,6 +124,9 @@ class Map:
                         rects.append(pg.Rect(x*GameSettings.TILE_SIZE, y*GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE))
                         
         return rects
+    
+    def _create_pham(self):
+        pass
 
     @classmethod
     def from_dict(cls, data: dict) -> "Map":
@@ -131,6 +139,9 @@ class Map:
             n_data = data.get('healing_statue')
             m.healing_statue = HealStatue(**n_data)
         
+        if data.get('pham_located', None):
+            m.pham_located = data.get('pham_located')
+        
         return m
 
     def to_dict(self):
@@ -140,5 +151,6 @@ class Map:
             "player": {
                 "x": self.spawn.x // GameSettings.TILE_SIZE,
                 "y": self.spawn.y // GameSettings.TILE_SIZE,
-            }
+            },
+            "pham_located": self.pham_located
         }

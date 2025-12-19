@@ -251,6 +251,7 @@ class NPC(Entity):
                 'price': pokemon['price'],
                 'sold': pokemon['sold']
             }
+            
         base['shop_pokemon'] = clean_pokemons_data
         base['reset_count'] = self.reset_count
         return base

@@ -49,12 +49,27 @@ class PokemonManager:
                 base_pokemons.append(pokemon)
         
         return base_pokemons
-    
     @classmethod
-    def get_rendom_pokemon(cls): # Bush pokemon random
+    def can_spawn_pokemon(cls, pokemon_name, day_state):
+        """Check if Pokemon can spawn at current time"""
         pokemon_data = cls.get_pokemons()
-        pokemon = random.choice(list(pokemon_data.keys()))
+        pokemon = pokemon_data.get(pokemon_name)
+        
+        if not pokemon:
+            return False
+        shown = pokemon.get("shown", ["all"])
+        return "all" in shown or day_state in shown
 
+    # Example
+    @classmethod
+    def get_rendom_pokemon(cls, day_state): # Bush pokemon random
+        pokemon_data = cls.get_pokemons()
+        pokemons = []
+        for pokemon_name in pokemon_data.keys():
+            if cls.can_spawn_pokemon(pokemon_name, day_state):
+                pokemons.append(pokemon_name)
+        
+        pokemon = random.choice(pokemons)
         pokemon_evolve = pokemon_data[pokemon].get('evolve', None)
         max_level = pokemon_evolve[1] - 1 if pokemon_evolve else 100
         min_level = 5

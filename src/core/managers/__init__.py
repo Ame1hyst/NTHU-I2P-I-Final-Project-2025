@@ -6,3 +6,4 @@ from .game_manager import GameManager
 from .online_manager import OnlineManager
 from .pokemon_manager import PokemonManager
 from .autosave_manager import AutoSaveManager
+from .achivevement_manager import AchieveManager

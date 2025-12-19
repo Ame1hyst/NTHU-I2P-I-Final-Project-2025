@@ -8,7 +8,8 @@
         "defense": 6
       },
       "abilities": ["scratch", "bite", "leaf blade", "vine whip"],
-      "evolve": ["Lawngrove", 30]
+      "evolve": ["Lawngrove", 30],
+      "shown": ["all"]
     },
     "Lawngrove": {
       "stats": {
@@ -18,7 +19,8 @@
         "defense": 11
       },
       "abilities": ["scratch", "bite", "leaf blade", "vine whip"],
-      "evolve": ["Lawnverdant", 40]
+      "evolve": ["Lawnverdant", 40],
+      "shown": ["all"]
     },
     "Lawnverdant": {
       "stats": {
@@ -28,7 +30,8 @@
         "defense": 16
       },
       "abilities": ["scratch", "bite", "leaf blade", "vine whip"],
-      "evolve": null
+      "evolve": null,
+      "shown": ["all"]
     },
     "Capibarus": {
       "stats": {
@@ -38,7 +41,8 @@
         "defense": 18
       },
       "abilities": ["scratch", "tackle", "punch", "rock slide"],
-      "evolve": null
+      "evolve": null,
+      "shown": ["dawn", "dusk", "night"]
     },
     "Hummi": {
       "stats": {
@@ -48,7 +52,8 @@
         "defense": 7
       },
       "abilities": ["scratch", "tackle", "quick attack", "gust"],
-      "evolve": null
+      "evolve": null,
+      "shown": ["dawn", "day"]
     },
     "Sapphireer": {
       "stats": {
@@ -57,8 +62,9 @@
         "attack": 7,
         "defense": 10
       },
-      "abilities": ["scratch", "water gun", "splash", "heal"],
-      "evolve": null
+      "abilities": ["scratch", "water gun", "splash", "surprise attack"],
+      "evolve": null,
+      "shown": ["dawn", "evening"]
     },
     "Mocon": {
       "stats": {
@@ -68,7 +74,8 @@
         "defense": 5
       },
       "abilities": ["scratch", "tackle", "quick attack", "fire blast"],
-      "evolve": ["Tancrest", 20]
+      "evolve": ["Tancrest", 20],
+      "shown": ["all"]
     },
     "Tancrest": {
       "stats": {
@@ -78,7 +85,8 @@
         "defense": 10
       },
       "abilities": ["scratch", "tackle", "quick attack", "fire blast"],
-      "evolve": ["Drevran", 30]
+      "evolve": ["Drevran", 30],
+      "shown": ["all"]
     },
     "Drevran": {
       "stats": {
@@ -88,7 +96,8 @@
         "defense": 15
       },
       "abilities": ["scratch", "tackle", "quick attack", "fire blast"],
-      "evolve": null
+      "evolve": null,
+      "shown": ["all"]
     },
     "Pastelrox": {
       "stats": {
@@ -98,7 +107,8 @@
         "defense": 14
       },
       "abilities": ["scratch", "tackle", "punch", "confuse"],
-      "evolve": null
+      "evolve": null,
+      "shown": ["dusk", "night"]
     },
     "Mauveriss": {
       "stats": {
@@ -108,7 +118,8 @@
         "defense": 12
       },
       "abilities": ["scratch", "bite", "tackle", "confuse"],
-      "evolve": null
+      "evolve": null,
+      "shown": ["night"]
     },
     "Azuron": {
       "stats": {
@@ -118,7 +129,8 @@
         "defense": 6
       },
       "abilities": ["scratch", "quick attack", "splash", "water gun"],
-      "evolve": ["Aqualin", 25]
+      "evolve": ["Aqualin", 25],
+      "shown": ["all"]
     },
     "Aqualin": {
       "stats": {
@@ -128,7 +140,8 @@
         "defense": 10
       },
       "abilities": ["scratch", "quick attack", "splash", "water gun"],
-      "evolve": ["Aquaris", 35]
+      "evolve": ["Aquaris", 35],
+      "shown": ["all"]
     },
     "Aquaris": {
       "stats": {
@@ -138,7 +151,8 @@
         "defense": 14
       },
       "abilities": ["scratch", "quick attack", "splash", "water gun"],
-      "evolve": null
+      "evolve": null,
+      "shown": ["all"]
     },
     "Peridox": {
       "stats": {
@@ -148,7 +162,8 @@
         "defense": 6
       },
       "abilities": ["scratch", "quick attack", "peak", "leaf blade"],
-      "evolve": ["Pyrrhidot", 15]
+      "evolve": ["Pyrrhidot", 15],
+      "shown": ["dawn", "day"]
     },
     "Pyrrhidot": {
       "stats": {
@@ -158,84 +173,70 @@
         "defense": 11
       },
       "abilities": ["scratch", "quick attack", "peak", "leaf blade"],
-      "evolve": null
+      "evolve": null,
+      "shown": ["dawn", "day"]
     }
   },
   "attacks": {
     "bite": {
       "element": "dark",
-      "damage": 12,
-      "target": "opponent"
+      "damage": 12
     },
     "leaf blade": {
       "element": "grass",
-      "damage": 25,
-      "target": "opponent"
+      "damage": 25
     },
     "vine whip": {
       "element": "grass",
-      "damage": 20,
-      "target": "opponent"
+      "damage": 20
     },
     "peak": {
       "element": "grass",
-      "damage": 15,
-      "target": "opponent"
+      "damage": 15
     },
     "rock slide": {
       "element": "rock",
-      "damage": 25,
-      "target": "opponent"
+      "damage": 25
     },
     "punch": {
       "element": "fighting",
-      "damage": 15,
-      "target": "opponent"
+      "damage": 15
     },
     "quick attack": {
       "element": "normal",
-      "damage": 15,
-      "target": "opponent"
+      "damage": 15
     },
     "gust": {
       "element": "flying",
-      "damage": 20,
-      "target": "opponent"
+      "damage": 20
     },
     "splash": {
       "element": "water",
-      "damage": 10,
-      "target": "opponent"
+      "damage": 10
     },
     "water gun": {
       "element": "water",
-      "damage": 20,
-      "target": "opponent"
+      "damage": 20
     },
-    "heal": {
+    "surprise attack": {
       "element": "water",
-      "damage": -20,
-      "target": "player"
+      "damage": 20
     },
     "fire blast": {
       "element": "fire",
-      "damage": 22,
-      "target": "opponent"
+      "damage": 22
     },
     "confuse": {
       "element": "ground",
-      "damage": 15,
-      "target": "opponent"
+      "damage": 15
     },
     "scratch": {
       "element": "normal",
-      "damage": 8,
-      "target": "opponent"
+      "damage": 8
     },
     "tackle": {
       "element": "normal",
-      "damage": 12,
-      "target": "opponent"
+      "damage": 12
     }
   },
   "sprites": {

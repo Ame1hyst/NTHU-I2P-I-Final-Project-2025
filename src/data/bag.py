@@ -7,7 +7,6 @@ from src.sprites import BackgroundSprite
 from src.interface.components import Button
 from src.core.services import scene_manager, input_manager, resource_manager
 
-
 class Bag():
     _monsters_data: list[Monster]
     _items_data: list[Item]
@@ -256,11 +255,12 @@ class Bag():
             for i, rect in enumerate(self.pokemon_rect):
                 if rect.collidepoint(input_manager.mouse_pos):
                     real_index = i + self.start # order in game_manager
-                    self.monsters_data[real_index]['hp'] = min(self.monsters_data[real_index]['hp'] + 50, self.monsters_data[real_index]['max_hp'])
-                    self.items_data[self.potion_index]['count'] -= 1
-                    heal =True
-                    heal_index = self.pokemon_index_map[real_index] # sync with order in list
-                    break
+                    if not self.monsters_data[real_index]['hp'] == self.monsters_data[real_index]['max_hp']:
+                        self.monsters_data[real_index]['hp'] = min(self.monsters_data[real_index]['hp'] + 50, self.monsters_data[real_index]['max_hp'])
+                        self.items_data[self.potion_index]['count'] -= 1
+                        heal =True
+                        heal_index = self.pokemon_index_map[real_index] # sync with order in list
+                        break
             
             # Sync with battle scene if active
             if scene_manager.previous_screen_name == 'battle':
@@ -297,6 +297,10 @@ class Bag():
         
         if input_manager.mouse_pressed(pg.BUTTON_LEFT):
             for i, rect in enumerate(self.item_rect):
+                if rect.collidepoint(input_manager.mouse_pos):
+                    print(f"Clicked rect {i}: {self.items_data[i]['name']}")          
+        if input_manager.mouse_pressed(pg.BUTTON_LEFT):
+            for i, rect in enumerate(self.item_rect):
                 if rect.collidepoint(input_manager.mouse_pos) and self.items_data[i]['count'] > 0:
                     item_name = self.items_data[i]['name'].lower()
                     if item_name not in ["attack buff", "dfs decrease"]:
@@ -321,6 +325,7 @@ class Bag():
                     self.render_item()
                     battle_scene.action_handle.state = 'battle'
                     scene_manager.change_scene(scene_manager.previous_screen_name)
+                    return  
     
     def heal_all(self):
         for pokemon in self.monsters_data:
