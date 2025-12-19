@@ -98,7 +98,7 @@
       "teleport": [
         {
           "x": 11,
-          "y": 12,
+          "y": 14,
           "destination": "map.tmx",
           "dest_x": 23,
           "dest_y": 24
@@ -251,8 +251,8 @@
   ],
   "current_map": "map.tmx",
   "player": {
-    "x": 15.24115728752538,
-    "y": 29.181157287525373
+    "x": 16.0,
+    "y": 30.0
   },
   "bag": {
     "monsters": [
@@ -266,17 +266,17 @@
       },
       {
         "name": "Lawngrove",
-        "hp": 180,
-        "max_hp": 180,
+        "hp": 140,
+        "max_hp": 140,
         "level": 38,
         "exp": 0
       },
       {
         "name": "Lawnverdant",
-        "hp": 180,
+        "hp": 106,
         "max_hp": 180,
-        "level": 58,
-        "exp": 2711
+        "level": 88,
+        "exp": 2447
       },
       {
         "name": "Capibarus",
@@ -301,10 +301,10 @@
       },
       {
         "name": "Lawnverdant",
-        "hp": 180,
+        "hp": 94,
         "max_hp": 180,
-        "level": 73,
-        "exp": 0
+        "level": 86,
+        "exp": 6074
       },
       {
         "name": "Pyrrhidot",
@@ -317,15 +317,15 @@
         "name": "Drevran",
         "hp": 200,
         "max_hp": 200,
-        "level": 87,
-        "exp": 2715
+        "level": 95,
+        "exp": 150
       },
       {
         "name": "Drevran",
         "hp": 200,
         "max_hp": 200,
-        "level": 79,
-        "exp": 5859
+        "level": 83,
+        "exp": 5234
       },
       {
         "name": "Sapphireer",
@@ -333,36 +333,82 @@
         "max_hp": 170,
         "level": 28,
         "exp": 0
+      },
+      {
+        "name": "Lawnwyn",
+        "hp": 100,
+        "max_hp": 100,
+        "level": 27
       }
     ],
     "items": [
       {
         "name": "Coins",
-        "count": 14267,
+        "count": 24946,
         "sprite_path": "ingame_ui/coin.png"
       },
       {
         "name": "Potion",
-        "count": 17,
+        "count": 9,
         "sprite_path": "ingame_ui/potion.png"
       },
       {
         "name": "Pokeball",
-        "count": 6,
+        "count": 5,
         "sprite_path": "ingame_ui/ball.png"
       },
       {
         "name": "DFS Decrease",
-        "count": 5,
+        "count": 2,
         "sprite_path": "ingame_ui/options1.png"
       },
       {
         "name": "Attack Buff",
-        "count": 5,
+        "count": 3,
         "sprite_path": "ingame_ui/options2.png"
+      },
+      {
+        "name": "Defense Buff",
+        "count": 3,
+        "sprite_path": "ingame_ui/options6.png"
       }
     ]
   },
-  "achievement": {},
-  "day_time": 0.34399999999195885
+  "achievement": {
+    "pham_collected": [
+      5,
+      1,
+      4,
+      3,
+      2
+    ],
+    "unlocked": [
+      "pokemon_caught",
+      "heal_count",
+      "boss_defeated",
+      "pham_collected",
+      "all_achievements"
+    ],
+    "heal_count": 10,
+    "pokemon_caught": [
+      "Lawngrove",
+      "Lawnverdant",
+      "Capibarus",
+      "Sapphireer",
+      "Mocon",
+      "Tancrest",
+      "Drevran",
+      "Pastelrox",
+      "Mauveriss",
+      "Azuron",
+      "Aqualin",
+      "Aquaris",
+      "Peridox",
+      "Pyrrhidot",
+      "Hummi",
+      "Lawnwyn"
+    ],
+    "boss_defeated": true
+  },
+  "day_time": 15.61999999998988
 }

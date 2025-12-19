@@ -4,7 +4,7 @@ from src.utils import GameSettings
 from src.sprites import BackgroundSprite
 from src.scenes.scene import Scene
 from src.interface.components import Button
-from src.core.services import scene_manager, sound_manager, input_manager
+from src.core.services import scene_manager, sound_manager, input_manager, resource_manager
 from typing import override
 
 class MenuScene(Scene):
@@ -15,7 +15,7 @@ class MenuScene(Scene):
     
     def __init__(self):
         super().__init__()
-        self.background = BackgroundSprite("backgrounds/background1.png")
+        self.background = BackgroundSprite("krajua/start_background.jpg")
 
         px, py = GameSettings.SCREEN_WIDTH // 2, GameSettings.SCREEN_HEIGHT * 3 // 4
         self.play_button = Button(
@@ -28,6 +28,10 @@ class MenuScene(Scene):
             px - 150, py, 100, 100,
             lambda: scene_manager.change_scene("setting")
         )
+        large_font = resource_manager.get_font("Pokemon Solid.ttf", 150)
+        self.title_surf = large_font.render("Elemontar", True, "#132411")
+        self.title_surf1 = large_font.render("Elemontar", True, "#A94444")
+        self.title_rect = self.title_surf.get_rect(center= (GameSettings.SCREEN_WIDTH // 2, GameSettings.SCREEN_HEIGHT //2))
         
     @override
     def enter(self) -> None:
@@ -51,3 +55,5 @@ class MenuScene(Scene):
         self.background.draw(screen)
         self.play_button.draw(screen)
         self.setting_button.draw(screen)
+        screen.blit(self.title_surf, self.title_rect)
+        screen.blit(self.title_surf1, (self.title_rect.x+10, self.title_rect.y))

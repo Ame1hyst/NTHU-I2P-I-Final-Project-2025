@@ -7,6 +7,7 @@ from src.interface.components import Button
 from src.core.managers import GameManager, AchieveManager
 from src.core.services import scene_manager, sound_manager, input_manager, resource_manager
 from src.interface.components.dialog import Dialog
+from src.sprites.animation import Animation
 from typing import override
 
 
@@ -16,11 +17,17 @@ class AchievementSCene(Scene):
         self.ui_setup()
         
         am_manager = AchieveManager()
-        self.progress = am_manager.progress
         self.achievement_data = am_manager.achievement_data
 
         self.img_render = []
+        self.sheet_ani = {}
         self.current_rect = None
+        self.current_animation = None
+        self.hovered_achievement = None
+
+    @property
+    def progress(self):
+        return self.game_manager.achievement
 
     def ui_setup(self):
         #Button asset setup
@@ -54,23 +61,30 @@ class AchievementSCene(Scene):
         self.x_button.update(dt)
    
         hovered_rect = None # For one time render
-        hovered_achievement = None
+        self.hovered_achievement = None
         
         for achievement, _, rect in self.img_render:
             if rect.collidepoint(input_manager.mouse_pos):
                 hovered_rect = rect
-                hovered_achievement = achievement
+                self.hovered_achievement = achievement
+                self.current_animation = self.sheet_ani[achievement]
                 break
         else:
             self.reset()
 
         if hovered_rect != self.current_rect:
-            self.current_rect = hovered_rect
-            if self.current_rect:
-                self.render_text(hovered_achievement, self.current_rect)
-            else:
-                self.dialog = None
+                self.current_rect = hovered_rect
+                if self.hovered_achievement:
+                    self.current_animation = self.sheet_ani[self.hovered_achievement]
+                    self.current_animation.rect = hovered_rect #set rect pos
+                    self.render_text(self.hovered_achievement, self.current_rect)
+                else:
+                    self.current_animation = None
+                    self.dialog = None
 
+        if self.current_animation and self.hovered_achievement in self.progress.get("unlocked", []):
+            self.current_animation.update(dt)
+        
         if self.dialog and self.dialog.current_text:
             self.dialog.update(dt)
     
@@ -85,11 +99,17 @@ class AchievementSCene(Scene):
 
         self.x_button.draw(screen)
 
+        
         for achievement, img, rect in self.img_render:
-            if achievement in self.progress.get("unlocked", []):
+            if achievement in self.progress.get("unlocked", []) and achievement != self.hovered_achievement:
                 screen.blit(img, rect)
-            pg.draw.rect(screen, "red", rect, 2)
+                
+            if GameSettings.DRAW_HITBOXES:
+                pg.draw.rect(screen, "red", rect, 2)
        
+        if self.current_animation and self.hovered_achievement in self.progress.get("unlocked", []):
+            self.current_animation.draw(screen)
+
         self.draw_text(screen)
        
     
@@ -100,7 +120,17 @@ class AchievementSCene(Scene):
         
         unlocked = achievement in  self.progress.get("unlocked", [])
         data = self.achievement_data[achievement]
-        text = data['hint_unlocked'] if unlocked else data['hint_locked']
+        if unlocked:
+            text = data['hint_unlocked'] 
+        else:
+            if achievement in self.progress.keys() and achievement != "boss_defeated" and self.progress.get(achievement, 0):
+                progress_val = self.progress.get(achievement)
+                count = len(progress_val) if isinstance(progress_val, list) else progress_val
+                text = f"Now get {count}{data['hint_progress']}"
+            
+            else:
+                 text = data['hint_locked']
+        
         if not self.dialog.current_text:
             self.dialog.add_sequence(text)     
         self.dialog.add_sequence(text)
@@ -122,11 +152,15 @@ class AchievementSCene(Scene):
             x, y = data['pos']
             rect = img.get_rect(center=(x, y))
             self.img_render.append((achievement, img, rect))
-    
-    def draw_unlocked_ani(self, achievement):
-        pass
         
+            sheet_path, sprite_num = data['sheet']
+            self.sheet_ani[achievement] = Animation(
+                sheet_path, ['animation'], sprite_num, (200, 200)
+            )
+
+      
     
     def reset(self):
         self.current_rect = None
+        self.current_animation = None
         self.dialog = None

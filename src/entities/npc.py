@@ -113,6 +113,7 @@ class NPC(Entity):
             'pokeball': 'ingame_ui/ball.png',
             'dfs decrease': 'ingame_ui/options2.png',
             'attack buff': 'ingame_ui/options1.png',
+            'defense buff': 'ingame_ui/options6.png',
             'coins': 'ingame_ui/coin.png'
         }
         return sprites.get(item_name.lower())
@@ -152,7 +153,7 @@ class NPC(Entity):
         if self.shop_items:
             return
         
-        all_items = ['potion', 'pokeball','dfs decrease', 'attack buff']
+        all_items = ['potion', 'pokeball','dfs decrease', 'attack buff', 'defense buff']
         items_shop = {}
         num_items = random.randint(2, 4)
         item_name = random.sample(all_items, k=num_items)

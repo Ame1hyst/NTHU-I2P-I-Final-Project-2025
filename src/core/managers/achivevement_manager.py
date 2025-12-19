@@ -50,7 +50,7 @@ class AchieveManager:
         elif trigger == "heal_count":
             required = self.achievement_data.get("required_count", 10)
             return self.progress.get("heal_count", 0) >= required
-        elif trigger == "catch_all_pokemon":
+        elif trigger == "pokemon_caught":
             total_pokemon = 16
             return len(self.progress.get("pokemon_caught", [])) >= total_pokemon
         elif trigger == "boss_defeated":
@@ -104,6 +104,7 @@ class AchieveManager:
                 self.progress["pham_collected"].append(pham_id)
                 if self.check_unlocked("pham_collected"):
                     self.progress["unlocked"].append('pham_collected')
+                    self.check_all_achievements()
    
     def check_pham_collision(self, rect:pg.Rect, player_rect):
         if not self.game_manager:
@@ -144,12 +145,14 @@ class AchieveManager:
             self.progress["pokemon_caught"].append(pokemon_name)
             if self.check_unlocked("pokemon_caught"):
                 self.progress["unlocked"].append('pokemon_caught')
+                self.check_all_achievements()
     
     # --Healing count--
     def add_heal_count(self):
         self.progress["heal_count"] = self.progress.get("heal_count", 0) + 1
         if self.check_unlocked("heal_count"):
             self.progress["unlocked"].append('heal_count')
+            self.check_all_achievements()
     
     #--FIght Boss--
     def defeated_boss(self):
@@ -159,7 +162,15 @@ class AchieveManager:
         self.progress["boss_defeated"] = True
         if self.check_unlocked("boss_defeated"):
             self.progress["unlocked"].append('boss_defeated')
+            self.check_all_achievements()
 
-    #--Recieve all--
+    #--Check all achievements--
     def all_unlocked(self):
-        return all(not self.check_unlocked(achievement) for achievement in self.progress['unlocked'] if "all_achievements" not in self.progress['unlocked'])
+        required_achievements = ["pham_collected", "pokemon_caught", "heal_count", "boss_defeated"]
+        unlocked = self.progress.get("unlocked", [])
+        return all(ach in unlocked for ach in required_achievements)
+
+    def check_all_achievements(self):
+        """Check if all 4 main achievements are unlocked, then unlock the final achievement"""
+        if self.all_unlocked() and "all_achievements" not in self.progress.get("unlocked", []):
+            self.progress["unlocked"].append("all_achievements")

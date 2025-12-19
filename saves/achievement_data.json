@@ -3,47 +3,50 @@
     "trigger": "pham_collected",
     "required_count": 5,
     "sprite_path": "krajua/pham.png",
-    "sheet_path": "krajua/pham_sheet.png",
+    "sheet": ["krajua/pham_sheet.png", 7],
     "pos": [940, 200],
-    "hint_locked": "hint1",
-    "hint_unlocked": "unlocked1"
+    "hint_locked": "...behind you",
+    "hint_progress": "/5",
+    "hint_unlocked": "oh- OH-"
   },
 
   "pokemon_caught": {
     "trigger": "pokemon_caught",
     "required_count": 16,
     "sprite_path": "krajua/the.png",
-    "sheet_path":"krajua/the_sheet.png",
+    "sheet":["krajua/the_sheet.png", 7],
     "pos": [610, 450],
-    "hint_locked": "hint",
-    "hint_unlocked": "unlocked"
+    "hint_locked": "catch me if you c-",
+    "hint_progress": "/16",
+    "hint_unlocked": "eep-"
   },
 
   "boss_defeated": {
     "trigger": "boss_defeated",
     "sprite_path": "krajua/donut.png",
-    "sheet_path":"krajua/donut_sheet.png",
+    "sheet":["krajua/donut_sheet.png", 7],
     "pos": [930, 450],
-    "hint_locked": "hint2",
-    "hint_unlocked": "unlocked2"
+    "hint_locked": "krrrrRRR",
+    "hint_unlocked": "3 2 1 boom!!!"
   },
 
   "heal_count": {
     "trigger": "heal_count",
     "required_count": 10,
     "sprite_path": "krajua/prai.png",
-    "sheet_path":"krajua/prai_sheet.png",
+    "sheet":["krajua/prai_sheet.png", 4],
     "pos": [620, 210],
-    "hint_locked": "hint3",
-    "hint_unlocked": "unlocked3"
+    "hint_locked": "dance, maybe I'll appear  ",
+    "hint_progress": "/10",
+    "hint_unlocked": "dancing in the dead...?"
   },
 
   "all_achievements": {
     "trigger": "all_achievements",
     "sprite_path": "krajua/ling.png",
-    "sheet_path": "krajua/ling_sheet.png",
+    "sheet": ["krajua/ling_sheet.png", 4],
     "pos": [300, 330],
-    "hint_locked": "hint4",
-    "hint_unlocked": "unlocked4"
+    "hint_locked": "they are my friends",
+    "hint_unlocked": "OUR friends. party time"
   }
 }

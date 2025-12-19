@@ -38,7 +38,7 @@ class Animation(Sprite):
                     c * frame_w, r * frame_h,
                     frame_w, frame_h
                 ))
-                anim.append(pg.transform.smoothscale(frame, size))
+                anim.append(pg.transform.scale(frame, size))
             self.o_animations[name] = anim
             self.animations = self.o_animations.copy()
             
@@ -57,7 +57,7 @@ class Animation(Sprite):
         for name, frames in self.o_animations.items():
             scaled_frames = []
             for frame in frames:
-                scaled_frames.append(pg.transform.smoothscale(frame, (n_width, n_height)))
+                scaled_frames.append(pg.transform.scale(frame, (n_width, n_height)))
             self.animations[name] = scaled_frames
         
         # Update rect size
@@ -76,7 +76,7 @@ class Animation(Sprite):
     def draw(self, screen: pg.Surface, camera: Optional[PositionCamera] = None, key_press = True):
         if key_press:
             frames = self.animations[self.cur_row]
-            idx = int((self.accumulator / self.loop) * self.n_keyframes)
+            idx = min(int((self.accumulator / self.loop) * self.n_keyframes), self.n_keyframes - 1)
         else:
             frames = self.animations[self.cur_row]
             idx = 0

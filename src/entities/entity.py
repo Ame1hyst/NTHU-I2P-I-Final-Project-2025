@@ -42,18 +42,18 @@ class Entity:
     
     @property
     def camera(self) -> PositionCamera:
-        position_x = self.animation.rect.centerx - GameSettings.SCREEN_WIDTH//2
-        position_y =  self.animation.rect.centery - GameSettings.SCREEN_HEIGHT//2
+        cam_x = self.animation.rect.centerx - GameSettings.SCREEN_WIDTH//2
+        cam_y =  self.animation.rect.centery - GameSettings.SCREEN_HEIGHT//2
 
         # Map size
         map_width = self.game_manager.current_map.tmxdata.width * GameSettings.TILE_SIZE
         map_height = self.game_manager.current_map.tmxdata.height * GameSettings.TILE_SIZE
 
         # Limit inside map
-        self.position.x = max(0, min(position_x, map_width - GameSettings.SCREEN_WIDTH))
-        self.position.y = max(0, min(position_y, map_height - GameSettings.SCREEN_HEIGHT))
+        cam_x = max(0, min(cam_x, map_width - GameSettings.SCREEN_WIDTH))
+        cam_y = max(0, min(cam_y, map_height - GameSettings.SCREEN_HEIGHT))
 
-        return PositionCamera(int(self.position.x), int(self.position.y))
+        return PositionCamera(int(cam_x), int(cam_y))
         
     def to_dict(self) -> dict[str, object]:
         return {

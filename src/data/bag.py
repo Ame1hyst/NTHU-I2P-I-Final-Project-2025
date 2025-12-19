@@ -307,7 +307,7 @@ class Bag():
             for i, rect in enumerate(self.item_rect):
                 if rect.collidepoint(input_manager.mouse_pos) and self.items_data[i]['count'] > 0:
                     item_name = self.items_data[i]['name'].lower()
-                    if item_name not in ["attack buff", "dfs decrease"]:
+                    if item_name not in ["attack buff", "dfs decrease", "defense buff"]:
                         continue
                     battle_scene = scene_manager.previous_screen
                     if  item_name == "attack buff":
@@ -317,17 +317,30 @@ class Bag():
                         
                         pokemon_name =  battle_scene.players[player_id].pokemon
                         battle_scene.action_handle.dialog.add_sequence([f"Player's{pokemon_name}'s Attack increased"])
+                    elif item_name == "defense buff":
+                        player_id = battle_scene.action_handle.current_player
+                        self.battle_logic.set_buff("defense buff", player_id)
+                        self.items_data[i]['count'] -= 1
+                        
+                        pokemon_name =  battle_scene.players[player_id].pokemon
+                        battle_scene.action_handle.dialog.add_sequence([f"Player's {pokemon_name}'s Defense increased"])
                     elif item_name == "dfs decrease":
                         enemy_id = battle_scene.action_handle.current_enemy
                         self.battle_logic.set_buff("dfs decrease", enemy_id)
                         self.items_data[i]['count'] -= 1
                         
                         pokemon_name =  battle_scene.enemies[enemy_id].pokemon
-                        battle_scene.action_handle.dialog.add_sequence([f"Enemy's{pokemon_name}'s Defense decreased"])
+                        battle_scene.action_handle.dialog.add_sequence([f"Enemy's {pokemon_name}'s Defense decreased"])
                     
                     self.render_item_list.clear()
                     self.render_item()
+                    
+                    # Switch turn to enemy after using item
+                    battle_scene.action_handle.previous_turn = 'player'
+                    battle_scene.action_handle.current_turn = 'waiting'
                     battle_scene.action_handle.state = 'battle'
+                    battle_scene.action_handle.dialog.queue_call_back = battle_scene.action_handle.switch_turn
+                    
                     scene_manager.change_scene(scene_manager.previous_screen_name)
                     return  
     

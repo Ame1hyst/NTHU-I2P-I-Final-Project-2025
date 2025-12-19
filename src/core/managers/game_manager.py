@@ -282,7 +282,7 @@ class GameManager:
                 gm.maps[m["path"]].npc_shop = NPC.from_dict(npc_data, gm)
             
             #Load achievement_data
-
+            gm.achievement = data.get("achievement", {})
             #Load day data
             gm.day_time = data.get("day_time", 8.00)
         

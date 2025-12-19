@@ -98,7 +98,7 @@
       "teleport": [
         {
           "x": 11,
-          "y": 12,
+          "y": 14,
           "destination": "map.tmx",
           "dest_x": 23,
           "dest_y": 24
@@ -354,12 +354,17 @@
       {
         "name": "DFS Decrease",
         "count": 5,
-        "sprite_path": "ingame_ui/options1.png"
+        "sprite_path": "ingame_ui/options2.png"
       },
       {
         "name": "Attack Buff",
         "count": 5,
-        "sprite_path": "ingame_ui/options2.png"
+        "sprite_path": "ingame_ui/options1.png"
+      },
+      {
+        "name": "Defense Buff",
+        "count": 5,
+        "sprite_path": "ingame_ui/options6.png"
       }
     ]
   },

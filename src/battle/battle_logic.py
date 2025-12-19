@@ -38,7 +38,8 @@ class BattleLogic:
         if pokemon_id not in self.status_effects:
             self.status_effects[pokemon_id] = {
                 'attack buff': {'value': 0, 'max_stat': 3, 'turn': 0},
-                'dfs decrease': {'value': 0, 'max_stat': 5, 'turn': 0}
+                'dfs decrease': {'value': 0, 'max_stat': 5, 'turn': 0},
+                'defense buff': {'value': 0, 'max_stat': 5, 'turn': 0}
             }    
     def set_buff(self, buff, pokemon_id):
         if not buff:
@@ -51,20 +52,23 @@ class BattleLogic:
         if buff == 'attack buff':
             new_value =  min(pokemon_status[buff]['value']+3, max_buff) # Limit to the Max
         elif buff == 'dfs decrease':
-            new_value =  min(pokemon_status[buff]['value']+5, max_buff) # Limit to the Max        
+            new_value =  min(pokemon_status[buff]['value']+5, max_buff) # Limit to the Max
+        elif buff == 'defense buff':
+            new_value =  min(pokemon_status[buff]['value']+5, max_buff) # Limit to the Max
         pokemon_status[buff]['value'] = new_value
-        pokemon_status[buff]['turn'] = 4 # Remian only 3 turn
+        pokemon_status[buff]['turn'] = 4 # Remain only 3 turn
     
     def apply_buff(self, pokemon_id):
         if pokemon_id not in self.status_effects:
-            return 0, 0
+            return 0, 0, 0
         status = self.status_effects[pokemon_id]
         
         # Add buff
         atk_buff = status['attack buff']['value']
-        dfs_buff = status['dfs decrease']['value']
+        dfs_debuff = status['dfs decrease']['value']
+        dfs_buff = status['defense buff']['value']
         
-        return atk_buff, dfs_buff   
+        return atk_buff, dfs_debuff, dfs_buff   
     
     def count_turn(self, pokemon_id):
         if pokemon_id not in self.status_effects:
@@ -86,6 +90,13 @@ class BattleLogic:
                 text.append("Defense debuff wore off")
                 self.reset_buff(pokemon_id)
 
+        if pokemon_status['defense buff']['value'] > 0 and pokemon_status['defense buff']['turn'] > 0:
+            pokemon_status['defense buff']['turn'] -= 1
+            if pokemon_status['defense buff']['turn'] == 0:
+                pokemon_status['defense buff']['value'] = 0
+                text.append("Defense buff wore off")
+                self.reset_buff(pokemon_id)
+
         return text   
       
     
@@ -93,13 +104,14 @@ class BattleLogic:
         if pokemon_id in self.status_effects:
             self.status_effects[pokemon_id] = {
             'attack buff': {'value': 0, 'max_stat': 3, 'turn': 0},
-            'dfs decrease': {'value': 0, 'max_stat': 5, 'turn': 0}
+            'dfs decrease': {'value': 0, 'max_stat': 5, 'turn': 0},
+            'defense buff': {'value': 0, 'max_stat': 5, 'turn': 0}
             }    
     # --Battle logic--
     def handle_attack(self, attacker, target, attack_name, attacker_side, attacker_id, target_id):
-        buff_atk, _ = self.apply_buff(attacker_id)
-        _, buff_dfs = self.apply_buff(target_id)
-        damages, text = self.calculate_atk(attack_name, target, attacker, buff_atk, buff_dfs)        
+        buff_atk, _, _ = self.apply_buff(attacker_id)
+        _, dfs_debuff, dfs_buff = self.apply_buff(target_id)
+        damages, text = self.calculate_atk(attack_name, target, attacker, buff_atk, dfs_debuff, dfs_buff)        
         target.hp = max(target.hp - damages, 0)
         
         texts = []
@@ -117,13 +129,13 @@ class BattleLogic:
                 texts.append(f"{attacker.pokemon} is ready to evolve!")    
         return texts
             
-    def calculate_atk(self, attack, target, attacker, buff_atk, buff_dfs):
+    def calculate_atk(self, attack, target, attacker, buff_atk, dfs_debuff, dfs_buff):
         base_dmg = self.attack_data[attack]['damage']
         attack_element = self.attack_data[attack]["element"]
         target_element = self.pokemon_data[target.pokemon]['stats']["element"]
 
         atk_total = attacker.atk + buff_atk
-        dfs_total = max(target.dfs - buff_dfs, 1)
+        dfs_total = max(target.dfs - dfs_debuff + dfs_buff, 1)
 
         level_multiplier = 1 + (attacker.level / 50)
         stat_multiplier = (atk_total * 1.5) / (dfs_total + 5)
