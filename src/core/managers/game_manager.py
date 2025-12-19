@@ -29,14 +29,15 @@ class GameManager:
     next_teleport: Teleport
     
     def __init__(self, maps: dict[str, Map], start_map: str, 
-                 player: Player | None,
-                 player_spwans: dict[str, Position],
-                 enemy_trainers: dict[str, list[EnemyTrainer]], 
-                 bag: Bag | None = None,
-                 healing_statue = {},
-                 achievement = {},
-                 day_time:float = None):
-                     
+                player: Player | None,
+                player_spwans: dict[str, Position],
+                enemy_trainers: dict[str, list[EnemyTrainer]], 
+                bag: Bag | None = None,
+                healing_statue = {},
+                achievement = {},
+                day_time:float = None,
+                save_path: str = "saves/game0.json"):  # ADD THIS
+                    
         from src.data.bag import Bag
         # Game Properties
         self.maps = maps
@@ -45,7 +46,8 @@ class GameManager:
         self.player_spawns = player_spwans
         self.enemy_trainers = enemy_trainers
         self.bag = bag if bag is not None else Bag([], [])
-        
+        self.save_path = "saves/game0.json"
+       
         #Additional
         self.healing_statue = healing_statue or {} #healing
         self.achievement = achievement # Achievement
@@ -140,22 +142,45 @@ class GameManager:
 
         
     def save(self, path: str) -> None:
+        save_path = path or self.save_path
         try:
-            with open(path, "w") as f:
+            with open(save_path, "w") as f:
                 json.dump(self.to_dict(), f, indent=2)
-            Logger.info(f"Game saved to {path}")
+            Logger.info(f"Game saved to {save_path}")
         except Exception as e:
-            Logger.warning(f"Failed to save game: {e}")
-             
+            Logger.warning(f"Failed to save game: {e}")             
     @classmethod
     def load(cls, path: str) -> "GameManager | None":
+        # Create from template if doesn't exist
         if not os.path.exists(path):
-            Logger.error(f"No file found: {path}, ignoring load function")
-            return None
+            template = "saves/backup.json"
+            if os.path.exists(template):
+                Logger.info(f"Creating new save file from template: {path}")
+                import shutil
+                shutil.copy(template, path)
+            else:
+                # Fallback to game0.json only if we are NOT trying to load game0.json
+                # But really, backup.json should exist.
+                Logger.error(f"No template found: {template}")
+                return None
 
-        with open(path, "r") as f:
-            data = json.load(f)
-        return cls.from_dict(data)
+        try:
+            with open(path, "r") as f:
+                data = json.load(f)
+        except json.JSONDecodeError:
+            Logger.warning(f"Corrupt save file found: {path}. Deleting and retrying with template...")
+            try:
+                os.remove(path)
+            except OSError:
+                pass
+            # Recursive call to try again (which will trigger template copy)
+            return cls.load(path)
+        
+        gm = cls.from_dict(data)
+        gm.save_path = path  # ADD: Store which file this player uses
+        
+        return gm
+
     
     def ingame_load(self, path):
         if not os.path.exists(path):
@@ -287,4 +312,3 @@ class GameManager:
     @classmethod
     def get_instance(cls): # GET game_manager
         return cls._instance
-

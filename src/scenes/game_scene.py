@@ -6,11 +6,15 @@ from src.scenes.scene import Scene
 from src.core import GameManager, OnlineManager, PokemonManager, AutoSaveManager
 from src.utils import Logger, PositionCamera, GameSettings, Position
 from src.interface.components import Button
-from src.core.services import scene_manager, sound_manager
+from src.core.services import scene_manager, sound_manager, input_manager
 from src.sprites import Sprite
 from src.maps.minimap import MiniMap
 from src.core.managers.achivevement_manager import AchieveManager
+from src.sprites.animation import Animation
+
+
 from typing import override
+import sys
 
 
 
@@ -21,8 +25,16 @@ class GameScene(Scene):
     
     def __init__(self):
         super().__init__()
+        #Online
+        player_slot = int(sys.argv[1]) if len(sys.argv) > 1 else 0  # Get player slot from command line
+        save_file = f"saves/game{player_slot}.json"
+                
+        # Load game manager
+        manager = GameManager.load(
+            save_file,  # Each player has their own save
+        )
+
         # Game Manager
-        manager = GameManager.load("saves/game0.json")
         GameManager.set_instance(manager) # Set game manager
         if manager is None:
             Logger.error("Failed to load game manager")
@@ -41,7 +53,7 @@ class GameScene(Scene):
             self.online_manager = OnlineManager()
         else:
             self.online_manager = None
-        self.sprite_online = Sprite("ingame_ui/options1.png", (GameSettings.TILE_SIZE, GameSettings.TILE_SIZE))
+        self.online_player_animations: dict[int, Animation] = {}
 
         #UI
         px, py = GameSettings.SCREEN_WIDTH, 0
@@ -74,11 +86,12 @@ class GameScene(Scene):
         if self.online_manager:
             self.online_manager.enter()
 
-        
+            
     @override
     def exit(self) -> None:
         if self.online_manager:
             self.online_manager.exit()
+        
         self.cycle.get_pause_time()
         self.minimap.visible = False
         
@@ -92,28 +105,99 @@ class GameScene(Scene):
             self.game_manager.player.update(dt)
         for enemy in self.game_manager.current_enemy_trainers:
             enemy.update(dt)
+        
+        # Update online players with interpolation
+        if self.online_manager and self.game_manager.player:
+            list_online = self.online_manager.get_list_players()
             
-        # Update others
+            for player in list_online:
+                pid = player["id"]
+                
+                # Check map matching
+                if player.get("map") != self.game_manager.current_map.path_name:
+                    if pid in self.online_player_animations:
+                        del self.online_player_animations[pid] # Cleanup
+                    continue
+                
+                # Create animation if new player
+                if pid not in self.online_player_animations:
+                    self.online_player_animations[pid] = Animation(
+                        "character/ow1.png",
+                        ["down", "left", "right", "up"],
+                        4,
+                        (GameSettings.TILE_SIZE, GameSettings.TILE_SIZE)
+                    )
+                    # Initialize position ONLY when creating new animation
+                    anim = self.online_player_animations[pid]
+                    anim.position = Position(player["x"], player["y"])
+                    anim.rect.topleft = (int(anim.position.x), int(anim.position.y))
+                
+                # Get animation (already exists)
+                anim = self.online_player_animations[pid]
+                direction = player.get("direction", "down")
+                is_moving = player.get("is_moving", False)
+                
+                # Target position from server
+                target_x = player["x"]
+                target_y = player["y"]
+                
+                # Initialize position attribute if it doesn't exist
+                if not hasattr(anim, 'position'):
+                    anim.position = Position(target_x, target_y)
+                
+                # No Lerp (Instant snap test)
+                anim.position = Position(target_x, target_y)
+
+                
+                # Update rect for rendering
+                anim.rect.topleft = (int(anim.position.x), int(anim.position.y))
+                
+                # Switch direction
+                if "none" in direction:
+                    direction = "down"
+                anim.switch(direction)
+                
+                # Animate if moving, freeze if stopped
+                if is_moving:
+                    anim.update(dt)
+                    print(f"{pid} is moving {is_moving} in {direction}")
+                else:
+                    anim.accumulator = 0  # Reset to first frame when stopped
+        
+        # Update UI buttons
         self.setting_button.update(dt)
         self.bag_button.update(dt)
         self.achievement_button.update(dt)
         
+        # Send local player update to server
         if self.game_manager.player is not None and self.online_manager is not None:
+            movement_keys = [pg.K_LEFT, pg.K_RIGHT, pg.K_UP, pg.K_DOWN, 
+                            pg.K_a, pg.K_d, pg.K_s, pg.K_w]
+            is_moving = any(input_manager.key_down(key) for key in movement_keys)
+            
+            direction_str = str(self.game_manager.player.direction).lower()
+            if "none" in direction_str:
+                direction_str = "down"
+            
             _ = self.online_manager.update(
                 self.game_manager.player.position.x, 
                 self.game_manager.player.position.y,
-                self.game_manager.current_map.path_name
+                self.game_manager.current_map.path_name,
+                direction_str,
+                is_moving
             )
+        
+        # Rest of updates
         self.achievement_manager.update_pham(self.game_manager.player)
         self.game_manager.current_map.update(dt, self.game_manager.player)
         self.minimap.update(dt)
-
-        #Cycle hanle
+        
+        # Cycle handle
         self.cycle_handle(dt)
         
-        # auto-save
-        self.auto_save.auto_save()
-        
+        # Auto-save
+        self.auto_save.auto_save()     
+    
     @override
     def draw(self, screen: pg.Surface):
         if self.game_manager.player:
@@ -132,19 +216,16 @@ class GameScene(Scene):
         self.bag_button.draw(screen)
         self.achievement_button.draw(screen)
 
-        # obj_bed = self.game_manager.current_map.get_obj('bed')
-        # rect = pg.rect.Rect(obj_bed.x, obj_bed.y, obj_bed.width, obj_bed.height)
-        # pg.draw.rect(screen, 'red', rect)
-        
         if self.online_manager and self.game_manager.player:
             list_online = self.online_manager.get_list_players()
             for player in list_online:
                 if player["map"] == self.game_manager.current_map.path_name:
-                    cam = self.game_manager.player.camera
-                    pos = cam.transform_position_as_position(Position(player["x"], player["y"]))
-                    self.sprite_online.update_pos(pos)
-                    self.sprite_online.draw(screen)
-        
+                    pid = player["id"]
+                    if pid in self.online_player_animations:
+                        anim = self.online_player_animations[pid]
+                        is_moving = player.get("is_moving", False)
+                        cam = self.game_manager.player.camera
+                        anim.draw(screen, cam, key_press=is_moving)        
         
         self.minimap.navigation.draw_path(screen, camera)
 

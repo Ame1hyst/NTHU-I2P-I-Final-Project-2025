@@ -1,6 +1,6 @@
 from server.playerHandler import PlayerHandler
 
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 PORT = 8989
 
@@ -8,6 +8,8 @@ PLAYER_HANDLER = PlayerHandler()
 PLAYER_HANDLER.start()
     
 class Handler(BaseHTTPRequestHandler):
+    protocol_version = "HTTP/1.1" # Enable Keep-Alive
+
     # def log_message(self, fmt, *args):
     #     return
 
@@ -50,11 +52,13 @@ class Handler(BaseHTTPRequestHandler):
             x = float(data["x"])
             y = float(data["y"])
             map_name = str(data["map"])
+            direction = str(data.get("direction", "down"))
+            is_moving = bool(data.get("is_moving", False))
         except (ValueError, TypeError):
             self._json(400, {"error": "bad_fields"})
             return
 
-        ok = PLAYER_HANDLER.update(pid, x, y, map_name)
+        ok = PLAYER_HANDLER.update(pid, x, y, map_name, direction, is_moving)
         if not ok:
             self._json(404, {"error": "player_not_found"})
             return
@@ -72,4 +76,4 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     print(f"[Server] Running on localhost with port {PORT}")
-    HTTPServer(("0.0.0.0", PORT), Handler).serve_forever()
+    ThreadingHTTPServer(("0.0.0.0", PORT), Handler).serve_forever()
