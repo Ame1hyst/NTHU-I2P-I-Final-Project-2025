@@ -11,12 +11,10 @@ from src.sprites import Sprite
 from src.maps.minimap import MiniMap
 from src.core.managers.achivevement_manager import AchieveManager
 from src.sprites.animation import Animation
+from src.interface.components.chat_overlay import ChatOverlay
 
-
-from typing import override
+from typing import override, Dict, Tuple
 import sys
-
-
 
 class GameScene(Scene):
     game_manager: GameManager
@@ -47,13 +45,24 @@ class GameScene(Scene):
         self.minimap = MiniMap(scale=0.05)
         self.achievement_manager = AchieveManager()
 
-
         # Online Manager
+        self.chat_overlay = None
         if GameSettings.IS_ONLINE:
             self.online_manager = OnlineManager()
+            self.chat_overlay = ChatOverlay(
+                send_callback=self.online_manager.send_chat,
+                get_messages=self.online_manager.get_recent_chat 
+            )
+            self.game_manager.chat_overlay = self.chat_overlay
         else:
             self.online_manager = None
+            
         self.online_player_animations: dict[int, Animation] = {}
+        
+        # Chat Bubbles
+        self._chat_bubbles: Dict[int, Tuple[str, float]] = {}
+        self._last_chat_id_seen = 0
+        self._font = pg.font.Font(None, 24)
 
         #UI
         px, py = GameSettings.SCREEN_WIDTH, 0
@@ -72,6 +81,7 @@ class GameScene(Scene):
             px-200, py+25, 50, 50,
             lambda: scene_manager.change_scene("achievement")
         )
+        
     # Set bag before change scene
     def open_bag(self):
         self.game_manager.current_bag = self.game_manager.bag
@@ -145,9 +155,8 @@ class GameScene(Scene):
                 if not hasattr(anim, 'position'):
                     anim.position = Position(target_x, target_y)
                 
-                # No Lerp (Instant snap test)
+                # No Lerp (Instant snap like user requested)
                 anim.position = Position(target_x, target_y)
-
                 
                 # Update rect for rendering
                 anim.rect.topleft = (int(anim.position.x), int(anim.position.y))
@@ -160,9 +169,39 @@ class GameScene(Scene):
                 # Animate if moving, freeze if stopped
                 if is_moving:
                     anim.update(dt)
-                    print(f"{pid} is moving {is_moving} in {direction}")
                 else:
                     anim.accumulator = 0  # Reset to first frame when stopped
+                    
+        # Update Chat Overlay
+        if self.chat_overlay:
+            # Only open on Enter. Do not close on Enter (Submit handles that, or ESC)
+            if not self.chat_overlay.is_open and input_manager.key_pressed(pg.K_RETURN):
+                self.chat_overlay.open()
+            self.chat_overlay.update(dt)
+            
+        # Update Chat Bubbles
+        if self.online_manager:
+            try:
+                msgs = self.online_manager.get_recent_chat(50)
+                max_id = self._last_chat_id_seen
+                now = time.monotonic()
+                # Detect Server Reset (If we see IDs much lower than expected)
+                if msgs and int(msgs[-1].get("id", 0)) < self._last_chat_id_seen:
+                    self._last_chat_id_seen = 0
+
+                for m in msgs:
+                    mid = int(m.get("id", 0))
+                    if mid <= self._last_chat_id_seen:
+                        continue
+                    sender = int(m.get("from", -1))
+                    text = str(m.get("text", ""))
+                    if sender >= 0 and text:
+                        self._chat_bubbles[sender] = (text, now + 5.0)
+                    if mid > max_id:
+                        max_id = mid
+                self._last_chat_id_seen = max_id
+            except Exception:
+                pass
         
         # Update UI buttons
         self.setting_button.update(dt)
@@ -195,8 +234,11 @@ class GameScene(Scene):
         # Cycle handle
         self.cycle_handle(dt)
         
-        # Auto-save
-        self.auto_save.auto_save()     
+        # Auto-save (Throttled to 5s)
+        self._autosave_timer = getattr(self, '_autosave_timer', 0) + dt
+        if self._autosave_timer > 5.0:
+            self.auto_save.auto_save()
+            self._autosave_timer = 0     
     
     @override
     def draw(self, screen: pg.Surface):
@@ -227,6 +269,10 @@ class GameScene(Scene):
                         cam = self.game_manager.player.camera
                         anim.draw(screen, cam, key_press=is_moving)        
         
+        # Bubbles
+        if self.game_manager.player:
+             self._draw_chat_bubbles(screen, self.game_manager.player.camera)
+        
         self.minimap.navigation.draw_path(screen, camera)
 
         if not self.minimap.full_map:
@@ -237,6 +283,9 @@ class GameScene(Scene):
         # full map
         if self.minimap.full_map:
             self.minimap.draw(screen)
+            
+        if self.chat_overlay:
+            self.chat_overlay.draw(screen)
       
     def cycle_handle(self, dt):
         self.cycle.update(dt)
@@ -245,9 +294,10 @@ class GameScene(Scene):
             # from src.maps import Map
             
             obj_bed = self.game_manager.current_map.get_obj('bed')
-            rect = pg.rect.Rect(obj_bed.x, obj_bed.y, obj_bed.width, obj_bed.height)
-            if self.game_manager.player.rect.colliderect(rect):
-                print('hi')
+            if obj_bed:
+                rect = pg.rect.Rect(obj_bed.x, obj_bed.y, obj_bed.width, obj_bed.height)
+                if self.game_manager.player.rect.colliderect(rect):
+                    pass
         
         if scene_manager.next_scene_name == 'battle':
             self.cycle.get_pause_time()
@@ -256,3 +306,66 @@ class GameScene(Scene):
                 self.cycle.resume()
             if scene_manager.next_scene_name != 'bag':
                 self.cycle.resume()
+
+    def _draw_chat_bubbles(self, screen: pg.Surface, camera: PositionCamera) -> None:
+        if not self.online_manager:
+            return
+            
+        # REMOVE EXPIRED BUBBLES
+        now = time.monotonic()
+        expired = [pid for pid, (_, ts) in self._chat_bubbles.items() if ts <= now]
+        for pid in expired:
+             del self._chat_bubbles[pid]
+        
+        if not self._chat_bubbles:
+            return
+
+        # DRAW LOCAL PLAYER'S BUBBLE
+        local_pid = self.online_manager.player_id
+        if self.game_manager.player and local_pid in self._chat_bubbles:
+            text, _ = self._chat_bubbles[local_pid]
+            self._draw_chat_bubble_for_pos(screen, camera, self.game_manager.player.position, text, self._font)
+
+        # DRAW OTHER PLAYERS' BUBBLES
+        # Use animations for smoother position if available
+        if not self.online_player_animations:
+             return
+             
+        for pid, anim in self.online_player_animations.items():
+            if pid not in self._chat_bubbles:
+                continue
+            
+            # Use 'anim.position' which is the interpolated world pos
+            # We assume if animation exists, they are on valid map (logic in update handles creation)
+             
+            text, _ = self._chat_bubbles[pid]
+            self._draw_chat_bubble_for_pos(screen, camera, anim.position, text, self._font)
+
+    def _draw_chat_bubble_for_pos(self, screen: pg.Surface, camera: PositionCamera, world_pos: Position, text: str, font: pg.font.Font):
+        # for camera
+        screen_pos = camera.transform_position_as_position(world_pos)
+        
+        # 2. Add screen center offset (player is rendered at screen center)
+        sw, sh = screen.get_size()
+        center_x = sw // 2
+        center_y = sh // 2
+        
+        # Padding inside the bubble (around text)
+        padding_x = 6
+        padding_y = 4
+        
+        text_surf = font.render(text, True, (0, 0, 0))
+        w = text_surf.get_width() + padding_x * 2
+        h = text_surf.get_height() + padding_y * 2
+            
+        # scene blit padding
+        bubble_x = center_x + screen_pos.x  # Right of player + 4px gap
+        bubble_y = center_y + screen_pos.y - GameSettings.TILE_SIZE 
+        
+        # Draw Background
+        rect = pg.Rect(bubble_x, bubble_y, w, h)
+        pg.draw.rect(screen, (255, 255, 255), rect, border_radius=8)
+        pg.draw.rect(screen, (0, 0, 0), rect, width=2, border_radius=8)
+        
+        # Draw Text
+        screen.blit(text_surf, (bubble_x + padding_x, bubble_y + padding_y))

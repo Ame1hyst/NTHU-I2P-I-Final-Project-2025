@@ -113,8 +113,6 @@ class AchievementSCene(Scene):
         screen.blit(self.dialog_surf, self.dialog_rect)
         self.dialog.draw(screen)
 
-        
-
 
     def render_achieve_pic(self):
         self.img_render.clear()
@@ -124,6 +122,10 @@ class AchievementSCene(Scene):
             x, y = data['pos']
             rect = img.get_rect(center=(x, y))
             self.img_render.append((achievement, img, rect))
+    
+    def draw_unlocked_ani(self, achievement):
+        pass
+        
     
     def reset(self):
         self.current_rect = None

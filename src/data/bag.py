@@ -87,6 +87,10 @@ class Bag():
             self.back_button.update(dt)
         else:
             battle_scene = scene_manager.previous_screen
+            # Safety check: Ensure previous screen handles battle actions
+            if not hasattr(battle_scene, 'action_handle'):
+                return
+                
             if battle_scene.action_handle.current_turn == 'enemy':
                 return
             #Change pokemon

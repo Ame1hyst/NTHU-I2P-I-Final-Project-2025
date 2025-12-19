@@ -24,22 +24,23 @@ class Player(Entity):
     def update(self, dt: float) -> None:
         #Input walk + facing
         dis = Position(0, 0)
-        if input_manager.key_down(pg.K_LEFT) or input_manager.key_down(pg.K_a):
-            dis.x -= 1
-            self.animation.switch('left')
-            self.direction = "left"
-        if input_manager.key_down(pg.K_RIGHT) or input_manager.key_down(pg.K_d):
-            dis.x += 1
-            self.animation.switch('right')
-            self.direction = "right"
-        if input_manager.key_down(pg.K_UP) or input_manager.key_down(pg.K_w):
-            dis.y -= 1
-            self.animation.switch('up')
-            self.direction = "up"
-        if input_manager.key_down(pg.K_DOWN) or input_manager.key_down(pg.K_s):
-            dis.y += 1
-            self.animation.switch('down')
-            self.direction = "down"
+        if not self.game_manager.chat_overlay.is_open:
+            if input_manager.key_down(pg.K_LEFT) or input_manager.key_down(pg.K_a):
+                dis.x -= 1
+                self.animation.switch('left')
+                self.direction = "left"
+            if input_manager.key_down(pg.K_RIGHT) or input_manager.key_down(pg.K_d):
+                dis.x += 1
+                self.animation.switch('right')
+                self.direction = "right"
+            if input_manager.key_down(pg.K_UP) or input_manager.key_down(pg.K_w):
+                dis.y -= 1
+                self.animation.switch('up')
+                self.direction = "up"
+            if input_manager.key_down(pg.K_DOWN) or input_manager.key_down(pg.K_s):
+                dis.y += 1
+                self.animation.switch('down')
+                self.direction = "down"
         
         #Normalize
         length = (dis.x**2 + dis.y**2)**(0.5)

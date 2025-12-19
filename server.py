@@ -3,6 +3,7 @@ from server.playerHandler import PlayerHandler
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 PORT = 8989
+MESSAGES = []
 
 PLAYER_HANDLER = PlayerHandler()
 PLAYER_HANDLER.start()
@@ -27,41 +28,72 @@ class Handler(BaseHTTPRequestHandler):
             self._json(200, {"players": PLAYER_HANDLER.list_players()})
             return
 
+        if self.path == "/chat":
+            self._json(200, {"messages": MESSAGES})
+            return
+
         self._json(404, {"error": "not_found"})
 
     def do_POST(self):
-        if self.path != "/players":
-            self._json(404, {"error": "not_found"})
-            return
+        if self.path == "/chat":
+            return self.handle_chat_post()
+        if self.path == "/players":
+            return self.handle_player_update_post()
 
+        # Consuming body is important even for 404 to avoid pipeline corruption
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            self.rfile.read(length)
+        except: pass
+        self._json(404, {"error": "not_found"})
+
+    def handle_player_update_post(self):
         length = int(self.headers.get("Content-Length", "0"))
         try:
             body = self.rfile.read(length)
             data = json.loads(body.decode("utf-8"))
+            # Update player data via PLAYER_HANDLER
+            # 'update' method needs to exist in PlayerHandler, or we modify dict directly if exposed
+            # Assuming PLAYER_HANDLER has an update method or we implement it.
+            # Let's check PlayerHandler usage. It seems to wrapper a list/dict.
+            # Reigster returns ID.
+            # We should probably add update method to PlayerHandler or access its store.
+            # For strictness, let's call update. 
+            PLAYER_HANDLER.update(
+                data["id"],
+                data["x"],
+                data["y"],
+                data["map"],
+                data.get("direction", "down"),
+                data.get("is_moving", False)
+            )
+        except Exception as e:
+            # print(f"Update error: {e}")
+            self._json(400, {"error": "invalid_json"})
+            return
+
+        self._json(200, {"success": True})
+
+    def handle_chat_post(self):
+        length = int(self.headers.get("Content-Length", "0"))
+        try:
+            body = self.rfile.read(length)
+            data = json.loads(body.decode("utf-8"))
+            pid = int(data["id"])
+            text = str(data["text"])
         except Exception:
             self._json(400, {"error": "invalid_json"})
             return
 
-        missing = [k for k in ("id", "x", "y", "map") if k not in data]
-        if missing:
-            self._json(400, {"error": "bad_fields", "missing": missing})
-            return
-
-        try:
-            pid = int(data["id"])
-            x = float(data["x"])
-            y = float(data["y"])
-            map_name = str(data["map"])
-            direction = str(data.get("direction", "down"))
-            is_moving = bool(data.get("is_moving", False))
-        except (ValueError, TypeError):
-            self._json(400, {"error": "bad_fields"})
-            return
-
-        ok = PLAYER_HANDLER.update(pid, x, y, map_name, direction, is_moving)
-        if not ok:
-            self._json(404, {"error": "player_not_found"})
-            return
+        msg = {
+            "id": len(MESSAGES) + 1,
+            "from": pid,
+            "text": text
+        }
+        MESSAGES.append(msg)
+        # Keep only last 50
+        if len(MESSAGES) > 50:
+            MESSAGES.pop(0)
 
         self._json(200, {"success": True})
 

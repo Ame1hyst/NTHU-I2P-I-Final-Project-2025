@@ -3,6 +3,7 @@
     "trigger": "pham_collected",
     "required_count": 5,
     "sprite_path": "krajua/pham.png",
+    "sheet_path": "krajua/pham_sheet.png",
     "pos": [940, 200],
     "hint_locked": "hint1",
     "hint_unlocked": "unlocked1"
@@ -12,6 +13,7 @@
     "trigger": "pokemon_caught",
     "required_count": 16,
     "sprite_path": "krajua/the.png",
+    "sheet_path":"krajua/the_sheet.png",
     "pos": [610, 450],
     "hint_locked": "hint",
     "hint_unlocked": "unlocked"
@@ -20,6 +22,7 @@
   "boss_defeated": {
     "trigger": "boss_defeated",
     "sprite_path": "krajua/donut.png",
+    "sheet_path":"krajua/donut_sheet.png",
     "pos": [930, 450],
     "hint_locked": "hint2",
     "hint_unlocked": "unlocked2"
@@ -29,6 +32,7 @@
     "trigger": "heal_count",
     "required_count": 10,
     "sprite_path": "krajua/prai.png",
+    "sheet_path":"krajua/prai_sheet.png",
     "pos": [620, 210],
     "hint_locked": "hint3",
     "hint_unlocked": "unlocked3"
@@ -37,6 +41,7 @@
   "all_achievements": {
     "trigger": "all_achievements",
     "sprite_path": "krajua/ling.png",
+    "sheet_path": "krajua/ling_sheet.png",
     "pos": [300, 330],
     "hint_locked": "hint4",
     "hint_unlocked": "unlocked4"

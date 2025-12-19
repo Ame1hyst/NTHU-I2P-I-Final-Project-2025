@@ -64,7 +64,7 @@ class OnlineManager:
         Logger.info("OnlineManager initialized")
         
     def enter(self):
-        self.register()
+        # self.register() # MOVED TO BACKGROUND THREAD to prevent lag
         self.start()
             
     def exit(self):
@@ -77,17 +77,21 @@ class OnlineManager:
     # ------------------------------------------------------------------
     # Threading and API Calling Below
     # ------------------------------------------------------------------
-    def register(self):
+    # ------------------------------------------------------------------
+    # Threading and API Calling Below
+    # ------------------------------------------------------------------
+    def register(self, session: requests.Session = None):
+        s = session if session else requests
         try:
             url = f"{self.base}/register"
-            resp = self._session.get(url, timeout=5)
-            resp.raise_for_status()
-            data = resp.json()
+            resp = s.get(url, timeout=5)
+            # resp.raise_for_status() 
             if resp.status_code == 200:
+                data = resp.json()
                 self.player_id = data["id"]
                 Logger.info(f"OnlineManager registered with id={self.player_id}")
             else:
-                Logger.error("Registration failed:", data)
+                Logger.warning(f"Registration failed: {resp.status_code}")
         except Exception as e:
             Logger.warning(f"OnlineManager registration error: {e}")
         return
@@ -130,10 +134,8 @@ class OnlineManager:
 
     def stop(self) -> None:
         self._stop_event.set()
-        if self._fetch_thread and self._fetch_thread.is_alive():
-            self._fetch_thread.join(timeout=2)
-        if self._send_thread and self._send_thread.is_alive():
-            self._send_thread.join(timeout=2)
+        # Do not join threads here. It causes lag on scene switch.
+        # Threads are daemon and will exit on their own when they see _stop_event.
 
     def _ws_thread_func(self) -> None:
         """Run WebSocket event loop in a separate thread"""
@@ -148,23 +150,61 @@ class OnlineManager:
             self._ws_loop = None
 
     def _fetch_loop(self) -> None:
+        # Create thread-local session
+        session = requests.Session()
+        
+        # Register in background if needed
+        if self.player_id == -1:
+            self.register(session)
+        
+        # Counter to throttle chat polling (dont need 60hz)
+        tick = 0
         while not self._stop_event.wait(POLL_INTERVAL):
-            self._fetch_players()
+            self._fetch_players(session)
+            
+            tick += 1
+            if tick >= 10: # Fetch chat every 10 frames (~6 times/sec)
+                self._fetch_chat(session)
+                tick = 0
+        
+        session.close()
     
     def _send_loop(self) -> None:
+        # Create thread-local session
+        session = requests.Session()
+        
         while not self._stop_event.is_set():
+            # 1. Send Position
             data = None
             with self._lock:
                 if self._latest_update:
                     data = self._latest_update
                     self._latest_update = None
-            
             if data:
-                self._send_update(data)
-            else:
-                time.sleep(POLL_INTERVAL)
+                self._send_update(data, session)
             
-    def _send_update(self, update_data: dict) -> None:
+            # 2. Send Chat (Drain Queue)
+            try:
+                while True:
+                    text = self._chat_out_queue.get_nowait()
+                    self._post_chat(text, session)
+            except queue.Empty:
+                pass
+                
+            time.sleep(POLL_INTERVAL)
+        
+        session.close()
+            
+    def _post_chat(self, text: str, session: requests.Session):
+        if self.player_id == -1: return
+        try:
+            url = f"{self.base}/chat"
+            body = {"id": self.player_id, "text": text}
+            session.post(url, json=body, timeout=1.0)
+        except Exception:
+            pass
+
+    def _send_update(self, update_data: dict, session: requests.Session) -> None:
         if self.player_id == -1:
             return
         
@@ -176,24 +216,40 @@ class OnlineManager:
         
         try:
             # Use session for reusing connection
-            resp = self._session.post(url, json=body, timeout=1.0)
+            resp = session.post(url, json=body, timeout=1.0)
             if resp.status_code == 404:
                 # Auto-Reconnect
                 Logger.warning("PlayerID not found (404). Re-registering...")
-                self.register()
+                self.register(session)
             elif resp.status_code != 200:
-                Logger.warning(f"Update failed: {resp.status_code}")
+                pass
         except Exception as e:
             # Logger.warning(f"Update connection error: {e}")
             pass
     
-    def _fetch_players(self) -> None:
+    def _fetch_chat(self, session: requests.Session) -> None:
+        try:
+            url = f"{self.base}/chat"
+            resp = session.get(url, timeout=1.0)
+            if resp.status_code == 200:
+                data = resp.json()
+                msgs = data.get("messages", [])
+                with self._lock:
+                    for m in msgs:
+                        mid = int(m.get("id", 0))
+                        if mid > self._last_chat_id:
+                            self._chat_messages.append(m)
+                            self._last_chat_id = mid
+        except Exception:
+            pass
+
+    def _fetch_players(self, session: requests.Session) -> None:
         if self.player_id == -1:
             return
 
         url = f"{self.base}/players"
         try:
-            resp = self._session.get(url, timeout=1.0)
+            resp = session.get(url, timeout=1.0)
             if resp.status_code == 200:
                 data = resp.json()
                 # Server returns dict {id: player_data}, so we need .values()
