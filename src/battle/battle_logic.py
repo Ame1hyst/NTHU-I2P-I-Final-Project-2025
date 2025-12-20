@@ -1,4 +1,6 @@
 from src.core.managers import PokemonManager
+from src.core.services import sound_manager
+from src.utils.settings import GameSettings
 import random
 class BattleLogic:
     def __init__(self):
@@ -117,6 +119,7 @@ class BattleLogic:
         texts = []
         if text:
             texts.append(text)
+        sound_manager.play_sound(f"battle/{attack_name}.wav") # Attack sound
         texts.append(f"{attacker_side}'s {attacker.pokemon} use {attack_name} to {target.pokemon} make damage {damages}")
         
         if attacker.exp is not None:
@@ -126,7 +129,8 @@ class BattleLogic:
                 texts.append(f"{attacker.pokemon} level up")
             
             if evolved:
-                texts.append(f"{attacker.pokemon} is ready to evolve!")    
+                sound_manager.play_sound(f"evolve.mp3")
+                texts.append(f"{attacker.pokemon} is evolved")    
         return texts
             
     def calculate_atk(self, attack, target, attacker, buff_atk, dfs_debuff, dfs_buff):

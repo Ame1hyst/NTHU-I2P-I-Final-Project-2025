@@ -11,7 +11,7 @@ class DayNightCycle:
         self.pause = False
         self.draw_overlay = True
         self.pause_time = 0
-        self.day_length = 60 * 60 * 1000 # length cycle per day (15 min real)
+        self.day_length = 3 * 60 * 1000 # length cycle per day (x min real)
         self.day_state = None
         self.time = self.game_manager.day_time
         self.overlay_color = None

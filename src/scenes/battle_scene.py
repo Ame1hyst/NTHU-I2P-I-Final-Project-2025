@@ -132,6 +132,7 @@ class BattleScene(Scene):
     @override
     def draw(self, screen: pg.Surface):
         self.background.draw(screen)
+        self.game_manager.day_night_cycle.draw(screen)
         pg.draw.rect(screen, "#2C292957", self.banner_text)
         
         if not self.battle_logic.battle_over(self.players, self.enemies):

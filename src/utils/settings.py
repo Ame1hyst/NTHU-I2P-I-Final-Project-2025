@@ -13,6 +13,7 @@ class Settings:
     # Audio
     MAX_CHANNELS: int = 16
     AUDIO_VOLUME: float = 0.5   # Volume of audio
+    SOUND_VOLUMN: float = AUDIO_VOLUME*2
     # Online
     IS_ONLINE: bool = True
     ONLINE_SERVER_URL: str = "http://localhost:8989"

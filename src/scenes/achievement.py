@@ -50,10 +50,12 @@ class AchievementSCene(Scene):
   
     @override
     def enter(self) -> None:
+        sound_manager.play_sound('open-bag-sound.mp3')
         self.render_achieve_pic()
        
     @override
     def exit(self) -> None:
+        sound_manager.play_sound('open-bag-sound.mp3')
         self.reset()
         
     @override

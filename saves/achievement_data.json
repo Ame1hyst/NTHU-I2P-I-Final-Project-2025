@@ -1,12 +1,12 @@
 {
   "pham_collected": {
     "trigger": "pham_collected",
-    "required_count": 5,
+    "required_count": 6,
     "sprite_path": "krajua/pham.png",
     "sheet": ["krajua/pham_sheet.png", 7],
     "pos": [940, 200],
     "hint_locked": "...behind you",
-    "hint_progress": "/5",
+    "hint_progress": "/6",
     "hint_unlocked": "oh- OH-"
   },
 

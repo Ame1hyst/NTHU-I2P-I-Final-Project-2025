@@ -1,5 +1,6 @@
 from src.interface.components.dialog import Dialog
 from src.core.managers import PokemonManager, AchieveManager
+from src.core.services import sound_manager
 import random
 
 class ActionHandle:
@@ -49,6 +50,7 @@ class ActionHandle:
             return texts  # Do nothing
 
         texts.append(f"{pokemon.pokemon} is faint")
+        sound_manager.play_sound("faint.mp3")
         pokemon.faint = True
 
         if team_name == 'Enemy':
@@ -138,6 +140,8 @@ class ActionHandle:
 
         for item in self.scene.game_manager.bag.items_data:
             if item['name'].lower() == 'pokeball' and item['count'] > 0 and random.randint(0, 1):
+                sound_manager.play_sound("RBY 119 Captured a Pokemon!.ogg")
+                
                 catch_pokemon = self.scene.enemies[self.current_enemy]
                 
                 self.scene.game_manager.bag.monsters_data.append({

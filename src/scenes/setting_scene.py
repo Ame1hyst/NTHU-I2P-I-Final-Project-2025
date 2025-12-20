@@ -76,11 +76,13 @@ class SettingScene(Scene):
 
     @override  
     def enter(self) -> None:
+        sound_manager.play_sound('open-bag-sound.mp3')
         self.vol_num = int(GameSettings.AUDIO_VOLUME*100)
         pass
 
     @override
     def exit(self) -> None:
+        sound_manager.play_sound('open-bag-sound.mp3')
         GameSettings.AUDIO_VOLUME = self.vol_num/100
         self.set_vols["mute_button"]["state"] = False
         pass

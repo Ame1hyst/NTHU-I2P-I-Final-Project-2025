@@ -67,7 +67,7 @@
         },
         {
           "x": 54.0,
-          "y": 16.0,
+          "y": 17.0,
           "classification": "stationary",
           "facing": "LEFT",
           "max_tiles": 2,
@@ -133,7 +133,7 @@
         {
           "id": 4,
           "x": 21,
-          "y": 13
+          "y": 12
         }
       ],
       "enemy_trainers": [
@@ -358,14 +358,14 @@
             "sold": false
           }
         },
-        "reset_count": 0
+        "reset_count": 3
       }
     }
   ],
-  "current_map": "shop.tmx",
+  "current_map": "map.tmx",
   "player": {
-    "x": 11.0,
-    "y": 8.64051385207397
+    "x": 24.36702352006584,
+    "y": 30.48200663506067
   },
   "bag": {
     "monsters": [
@@ -379,17 +379,17 @@
       },
       {
         "name": "Lawngrove",
-        "hp": 135,
+        "hp": 140,
         "max_hp": 140,
         "level": 38,
         "exp": 0
       },
       {
         "name": "Lawnverdant",
-        "hp": 180,
+        "hp": 142,
         "max_hp": 180,
-        "level": 58,
-        "exp": 2711
+        "level": 69,
+        "exp": 1060
       },
       {
         "name": "Capibarus",
@@ -414,7 +414,7 @@
       },
       {
         "name": "Lawnverdant",
-        "hp": 117,
+        "hp": 167,
         "max_hp": 180,
         "level": 80,
         "exp": 5510
@@ -428,7 +428,7 @@
       },
       {
         "name": "Drevran",
-        "hp": 0,
+        "hp": 100,
         "max_hp": 200,
         "level": 95,
         "exp": 150
@@ -452,22 +452,28 @@
         "hp": 100,
         "max_hp": 100,
         "level": 27
+      },
+      {
+        "name": "Pyrrhidot",
+        "hp": 150,
+        "max_hp": 150,
+        "level": 24
       }
     ],
     "items": [
       {
         "name": "Coins",
-        "count": 18939,
+        "count": 21324,
         "sprite_path": "ingame_ui/coin.png"
       },
       {
         "name": "Potion",
-        "count": 17,
+        "count": 8,
         "sprite_path": "ingame_ui/potion.png"
       },
       {
         "name": "Pokeball",
-        "count": 5,
+        "count": 4,
         "sprite_path": "ingame_ui/ball.png"
       },
       {
@@ -482,7 +488,7 @@
       },
       {
         "name": "Defense Buff",
-        "count": 5,
+        "count": 4,
         "sprite_path": "ingame_ui/options6.png"
       }
     ]
@@ -513,5 +519,5 @@
     ],
     "boss_defeated": false
   },
-  "day_time": 8.30251333332479
+  "day_time": 21.451926666668257
 }

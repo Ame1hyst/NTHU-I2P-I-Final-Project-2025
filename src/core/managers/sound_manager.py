@@ -8,15 +8,18 @@ class SoundManager:
         self.current_bgm = None
         self.current_bgm_path = None #for change bgm
         
-    def play_bgm(self, filepath: str):
+    def play_bgm(self, filepath: str, volume: float = GameSettings.AUDIO_VOLUME):
         if self.current_bgm_path == filepath and self.current_bgm:
+            # Update volume even if it's the same track (in case volume changed)
+            self.current_bgm.set_volume(volume)
             return # continue play
         
         if self.current_bgm:
             self.current_bgm.stop()
         
-        audio = load_sound(filepath)
-        audio.set_volume(GameSettings.AUDIO_VOLUME)
+        from src.core.services import resource_manager # prevent circular import
+        audio = resource_manager.get_sound(filepath)
+        audio.set_volume(volume)
         audio.play(-1)
         self.current_bgm = audio
         self.current_bgm_path = filepath
@@ -27,8 +30,9 @@ class SoundManager:
     def resume_all(self):
         pg.mixer.unpause()
         
-    def play_sound(self, filepath, volume=0.7):
-        sound = load_sound(filepath)
+    def play_sound(self, filepath, volume=GameSettings.SOUND_VOLUMN):
+        from src.core.services import resource_manager # prevent circular import
+        sound = resource_manager.get_sound(filepath)
         sound.set_volume(volume)
         sound.play()
     

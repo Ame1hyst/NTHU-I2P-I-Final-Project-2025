@@ -335,7 +335,7 @@ class ShopScene(Scene):
             selected = list(self.shop_pokemons.values())[self.selected_idx]
             if self.can_buy(pokemon=selected):
                 from src.core.managers.pokemon_manager import PokemonManager
-                print(selected['name'])
+                sound_manager.play_sound('purchase.wav')
                 pokemon_data= PokemonManager.get_pokemons()
                 pokemon = pokemon_data[selected['name']]
                 self.game_manager.bag.monsters_data.append({
@@ -354,6 +354,7 @@ class ShopScene(Scene):
         elif self.selected_type == 'item':
             selected = list(self.shop_items.values())[self.selected_idx]
             if self.can_buy(item=selected):
+                sound_manager.play_sound('purchase.wav')
                 for item in self.game_manager.bag.items_data:
                     if item['name'].lower() == selected['name']:
                         item['count'] += 1

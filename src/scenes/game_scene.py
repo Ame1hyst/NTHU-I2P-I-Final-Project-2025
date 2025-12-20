@@ -89,7 +89,9 @@ class GameScene(Scene):
         
     @override
     def enter(self) -> None:
-        sound_manager.play_bgm("RBY 103 Pallet Town.ogg")
+        bgm_path, bgm_vol = self.map_sound()
+        sound_manager.play_bgm(bgm_path, bgm_vol)
+        
         self.cycle.resume()
         self.minimap.visible = True
 
@@ -107,8 +109,11 @@ class GameScene(Scene):
         
     @override
     def update(self, dt: float):
-        # Check if there is assigned next scene
-        self.game_manager.try_switch_map()
+        old_map = self.game_manager.current_map_key
+        self.game_manager.try_switch_map() # check if it assign new map
+        if old_map != self.game_manager.current_map_key:
+            bgm_path, bgm_vol = self.map_sound()
+            sound_manager.play_bgm(bgm_path, bgm_vol)
         
         # Update player and other data
         if self.game_manager.player:
@@ -379,3 +384,14 @@ class GameScene(Scene):
         
         # Draw Text
         screen.blit(text_surf, (bubble_x + padding_x, bubble_y + padding_y))
+
+    
+    def map_sound(self):       
+        if self.game_manager.current_map_key == 'home.tmx':
+            return "Gymnopédie No.1.ogg", GameSettings.AUDIO_VOLUME * 7
+        elif self.game_manager.current_map_key == 'gym.tmx':
+            return "RBY 105 Oak Research Lab.ogg", GameSettings.AUDIO_VOLUME
+        elif self.game_manager.current_map_key == 'shop.tmx':
+            return "Minuet.ogg", GameSettings.AUDIO_VOLUME * 2
+        else:
+            return "RBY 103 Pallet Town.ogg", GameSettings.AUDIO_VOLUME

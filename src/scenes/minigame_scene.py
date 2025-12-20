@@ -171,7 +171,9 @@ class MiniGame(Scene):
             
             if self.ani_idx >= len(self.directon):
                 self.ani_idx = 0
-                
+            
+            sound_manager.play_sound("shadow.ogg")    
+            
             if not self.count_time(dt, 15):
                 scene_manager.change_scene(scene_manager.previous_screen_name)
 

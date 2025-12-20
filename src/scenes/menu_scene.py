@@ -34,7 +34,7 @@ class MenuScene(Scene):
         
     @override
     def enter(self) -> None:
-        sound_manager.play_bgm("RBY 101 Opening (Part 1).ogg")
+        sound_manager.play_bgm("RBY 105 Oak Research Lab.ogg", )
         pass
 
     @override

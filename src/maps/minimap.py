@@ -1,6 +1,6 @@
 from src.core.managers import GameManager
-from src.utils import load_tmx, Position, GameSettings, PositionCamera, Teleport
-from src.core.services import  input_manager, resource_manager
+from src.utils import  GameSettings
+from src.core.services import  input_manager, resource_manager, sound_manager
 from src.maps.navigation import Navigation
 import pygame as pg
 class MiniMap:
@@ -170,6 +170,7 @@ class MiniMap:
 
     def handle_map_size(self):
         self.full_map = not self.full_map
+        sound_manager.play_sound('open-bag-sound.mp3')
         if self.full_map:  
             self.v_scale = self.full_v
             self.screen_pos = ((GameSettings.SCREEN_WIDTH - self.v_scale[0] -150) // 2, (GameSettings.SCREEN_HEIGHT - self.v_scale[1]) // 2)

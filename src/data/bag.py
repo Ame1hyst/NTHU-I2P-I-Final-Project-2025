@@ -5,7 +5,7 @@ from src.core import GameManager
 from src.utils.definition import Monster, Item
 from src.sprites import BackgroundSprite
 from src.interface.components import Button
-from src.core.services import scene_manager, input_manager, resource_manager
+from src.core.services import scene_manager, input_manager, resource_manager, sound_manager
 
 class Bag():
     _monsters_data: list[Monster]
@@ -57,6 +57,8 @@ class Bag():
         self.stop = 6
     
     def enter(self) -> None:
+        sound_manager.play_sound('open-bag-sound.mp3')
+
         self.game_manager = GameManager.get_instance()
         if scene_manager.previous_screen_name == 'game':
             self.mode = 'game'
@@ -74,6 +76,8 @@ class Bag():
         self.render_item()
     
     def exit(self) -> None:
+        sound_manager.play_sound('open-bag-sound.mp3')
+
         self.render_pokemon_list.clear() # prevent caching
         self.render_item_list.clear()
         self.start, self.stop = 0, 6
@@ -268,6 +272,7 @@ class Bag():
                     if not self.monsters_data[real_index]['hp'] == self.monsters_data[real_index]['max_hp']:
                         self.monsters_data[real_index]['hp'] = min(self.monsters_data[real_index]['hp'] + 50, self.monsters_data[real_index]['max_hp'])
                         self.items_data[self.potion_index]['count'] -= 1
+                        sound_manager.play_sound('battle/heal.wav')
                         heal =True
                         heal_index = self.pokemon_index_map[real_index] # sync with order in list
                         break
@@ -316,6 +321,8 @@ class Bag():
                     if item_name not in ["attack buff", "dfs decrease", "defense buff"]:
                         continue
                     battle_scene = scene_manager.previous_screen
+                    sound_manager.play_sound(f"battle/{item_name}.wav")
+                    
                     if  item_name == "attack buff":
                         player_id = battle_scene.action_handle.current_player
                         self.battle_logic.set_buff("attack buff", player_id)

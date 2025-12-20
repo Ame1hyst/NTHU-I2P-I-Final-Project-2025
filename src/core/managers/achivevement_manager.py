@@ -96,6 +96,7 @@ class AchieveManager:
     
     def collect_pham(self, pham_id: str):
         if not self.progress.get("pham_collected", []):
+            sound_manager.play_sound("Fruit collect 1.wav")
             self.progress["pham_collected"] = self.progress.get("pham_collected", [])
         
         if pham_id not in self.progress["pham_collected"]:
