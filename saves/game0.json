@@ -16,6 +16,13 @@
           "destination": "home.tmx",
           "dest_x": 12,
           "dest_y": 13
+        },
+        {
+          "x": 54,
+          "y": 14,
+          "destination": "shop.tmx",
+          "dest_x": 7,
+          "dest_y": 13
         }
       ],
       "player": {
@@ -196,63 +203,169 @@
         "shop_items": {
           "0": {
             "name": "pokeball",
-            "count": 10,
-            "price": 1152,
+            "count": 8,
+            "price": 824,
             "img_path": "ingame_ui/ball.png"
           },
           "1": {
-            "name": "dfs decrease",
-            "count": 8,
-            "price": 676,
-            "img_path": "ingame_ui/options2.png"
+            "name": "attack buff",
+            "count": 5,
+            "price": 407,
+            "img_path": "ingame_ui/options1.png"
           },
           "2": {
             "name": "potion",
-            "count": -1,
-            "price": 494,
+            "count": 7,
+            "price": 698,
             "img_path": "ingame_ui/potion.png"
           },
           "3": {
-            "name": "attack buff",
+            "name": "defense buff",
             "count": 7,
-            "price": 538,
-            "img_path": "ingame_ui/options1.png"
+            "price": 505,
+            "img_path": "ingame_ui/options6.png"
           }
         },
         "shop_pokemon": {
           "0": {
-            "name": "Sapphireer",
-            "level": 29,
-            "price": 3000,
+            "name": "Peridox",
+            "level": 9,
+            "price": 1000,
             "sold": false
           },
           "1": {
+            "name": "Azuron",
+            "level": 24,
+            "price": 2875,
+            "sold": false
+          },
+          "2": {
             "name": "Peridox",
+            "level": 14,
+            "price": 1724,
+            "sold": false
+          }
+        },
+        "reset_count": 3
+      }
+    },
+    {
+      "path": "shop.tmx",
+      "teleport": [
+        {
+          "x": 5,
+          "y": 14,
+          "destination": "map.tmx",
+          "dest_x": 54,
+          "dest_y": 15
+        },
+        {
+          "x": 6,
+          "y": 14,
+          "destination": "map.tmx",
+          "dest_x": 54,
+          "dest_y": 15
+        },
+        {
+          "x": 7,
+          "y": 14,
+          "destination": "map.tmx",
+          "dest_x": 54,
+          "dest_y": 15
+        },
+        {
+          "x": 8,
+          "y": 14,
+          "destination": "map.tmx",
+          "dest_x": 54,
+          "dest_y": 15
+        },
+        {
+          "x": 9,
+          "y": 14,
+          "destination": "map.tmx",
+          "dest_x": 54,
+          "dest_y": 15
+        }
+      ],
+      "player": {
+        "x": 7,
+        "y": 12
+      },
+      "pham_located": [
+        {
+          "id": 6,
+          "x": 11,
+          "y": 4
+        }
+      ],
+      "enemy_trainers": [],
+      "npc_shop": {
+        "x": 7.0,
+        "y": 6.0,
+        "facing": "DOWN",
+        "max_tiles": 2,
+        "img_path": "character/ow3.png",
+        "shop_items": {
+          "0": {
+            "name": "potion",
+            "count": 5,
+            "price": 510,
+            "img_path": "ingame_ui/potion.png"
+          },
+          "1": {
+            "name": "dfs decrease",
+            "count": 7,
+            "price": 493,
+            "img_path": "ingame_ui/options2.png"
+          }
+        },
+        "shop_pokemon": {
+          "0": {
+            "name": "Lawnwyn",
             "level": 5,
             "price": 600,
             "sold": false
           },
+          "1": {
+            "name": "Mauveriss",
+            "level": 6,
+            "price": 700,
+            "sold": false
+          },
           "2": {
-            "name": "Hummi",
-            "level": 20,
-            "price": 2100,
+            "name": "Azuron",
+            "level": 14,
+            "price": 1500,
             "sold": false
           },
           "3": {
-            "name": "Sapphireer",
-            "level": 28,
-            "price": 2900,
-            "sold": true
+            "name": "Azuron",
+            "level": 21,
+            "price": 2200,
+            "sold": false
+          },
+          "4": {
+            "name": "Peridox",
+            "level": 10,
+            "price": 1100,
+            "sold": false
+          },
+          "5": {
+            "name": "Lawnwyn",
+            "level": 23,
+            "price": 2400,
+            "sold": false
           }
         },
         "reset_count": 0
       }
     }
   ],
-  "current_map": "map.tmx",
+  "current_map": "shop.tmx",
   "player": {
-    "x": 8.206475180106473,
-    "y": 6.73336277908775
+    "x": 11.0,
+    "y": 8.64051385207397
   },
   "bag": {
     "monsters": [
@@ -400,5 +513,5 @@
     ],
     "boss_defeated": false
   },
-  "day_time": 7.4343999999916255
+  "day_time": 8.30251333332479
 }

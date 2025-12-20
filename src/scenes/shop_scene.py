@@ -393,11 +393,13 @@ class ShopScene(Scene):
             self.selected_type = None
     
     def reset_per_day(self):
-        if 7 <=self.cycle.get_hours() <=12 and not self.day_reset:
-            self.current_page = 0
-            self.reset_count = 3
-            self.day_reset = True
-
+        in_reset_window = 7 <= self.cycle.get_hours() <= 12
+        if in_reset_window:
+            if not self.day_reset:
+                self.reset_count = 3
+                if self.npc_shop:
+                    self.npc_shop.reset_count = 3
+                self.day_reset = True
         else:
-            self.day_reset = False 
+            self.day_reset = False
 

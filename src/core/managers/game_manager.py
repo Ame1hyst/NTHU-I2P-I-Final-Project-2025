@@ -78,7 +78,7 @@ class GameManager:
         return self.maps[self.current_map_key].teleporters
         
     def get_map_scale(self, map_name: str) -> int:
-        if map_name == 'home.tmx':
+        if map_name in ['home.tmx', 'shop.tmx']:
             return 2
         return 1
 
