@@ -251,8 +251,8 @@
   ],
   "current_map": "map.tmx",
   "player": {
-    "x": 16.0,
-    "y": 30.0
+    "x": 8.206475180106473,
+    "y": 6.73336277908775
   },
   "bag": {
     "monsters": [
@@ -266,17 +266,17 @@
       },
       {
         "name": "Lawngrove",
-        "hp": 140,
+        "hp": 135,
         "max_hp": 140,
         "level": 38,
         "exp": 0
       },
       {
         "name": "Lawnverdant",
-        "hp": 106,
+        "hp": 180,
         "max_hp": 180,
-        "level": 88,
-        "exp": 2447
+        "level": 58,
+        "exp": 2711
       },
       {
         "name": "Capibarus",
@@ -301,10 +301,10 @@
       },
       {
         "name": "Lawnverdant",
-        "hp": 94,
+        "hp": 117,
         "max_hp": 180,
-        "level": 86,
-        "exp": 6074
+        "level": 80,
+        "exp": 5510
       },
       {
         "name": "Pyrrhidot",
@@ -315,14 +315,14 @@
       },
       {
         "name": "Drevran",
-        "hp": 200,
+        "hp": 0,
         "max_hp": 200,
         "level": 95,
         "exp": 150
       },
       {
         "name": "Drevran",
-        "hp": 200,
+        "hp": 169,
         "max_hp": 200,
         "level": 83,
         "exp": 5234
@@ -344,12 +344,12 @@
     "items": [
       {
         "name": "Coins",
-        "count": 24946,
+        "count": 18939,
         "sprite_path": "ingame_ui/coin.png"
       },
       {
         "name": "Potion",
-        "count": 9,
+        "count": 17,
         "sprite_path": "ingame_ui/potion.png"
       },
       {
@@ -359,37 +359,27 @@
       },
       {
         "name": "DFS Decrease",
-        "count": 2,
-        "sprite_path": "ingame_ui/options1.png"
-      },
-      {
-        "name": "Attack Buff",
-        "count": 3,
+        "count": 5,
         "sprite_path": "ingame_ui/options2.png"
       },
       {
+        "name": "Attack Buff",
+        "count": 5,
+        "sprite_path": "ingame_ui/options1.png"
+      },
+      {
         "name": "Defense Buff",
-        "count": 3,
+        "count": 5,
         "sprite_path": "ingame_ui/options6.png"
       }
     ]
   },
   "achievement": {
-    "pham_collected": [
-      5,
-      1,
-      4,
-      3,
-      2
-    ],
+    "pham_collected": [],
     "unlocked": [
-      "pokemon_caught",
-      "heal_count",
-      "boss_defeated",
-      "pham_collected",
-      "all_achievements"
+      "pokemon_caught"
     ],
-    "heal_count": 10,
+    "heal_count": 9,
     "pokemon_caught": [
       "Lawngrove",
       "Lawnverdant",
@@ -408,7 +398,7 @@
       "Hummi",
       "Lawnwyn"
     ],
-    "boss_defeated": true
+    "boss_defeated": false
   },
-  "day_time": 15.61999999998988
+  "day_time": 7.4343999999916255
 }

@@ -80,8 +80,9 @@ class Pokemon:
     def catch_animation(self, screen):
         if not self.catching:
             return
-        scale = int(self.rect.height / self.animation_scale)
-        surf = pg.transform.scale(self.img_surf, (int(scale), int(scale)))
+        
+        scale = max(0.01, 1.0 - self.animation_scale)
+        surf = pg.transform.scale(self.img_surf, (int(80 * scale), int(80 * scale)))
         rect = surf.get_rect(center = self.c_pos)
         screen.blit(surf, rect)
 
@@ -162,8 +163,10 @@ class Pokemon:
     
     def draw(self, screen):
         self.draw_banner(screen)
-        self.start_animation(screen)
-        self.catch_animation(screen)
-
-        if self.surf and self.rect:
+        
+        if self.animation:
+            self.start_animation(screen)
+        elif self.catching:
+            self.catch_animation(screen)
+        elif self.surf and self.rect:
             screen.blit(self.surf, self.rect)

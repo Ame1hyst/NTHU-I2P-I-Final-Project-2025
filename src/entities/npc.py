@@ -182,7 +182,7 @@ class NPC(Entity):
         return round(price)   
     
     def calculate_item_price(self, item_name, count):
-        if item_name.lower() in ['dfs decrease', 'attack buff']:
+        if item_name.lower() in ['dfs decrease', 'attack buff', 'defense buff']:
             base_price = 80
         elif item_name.lower() == 'potion':
             base_price = 100

@@ -362,7 +362,7 @@ class ShopScene(Scene):
                     self.game_manager.bag.items_data.append({
                         "name": selected['name'],
                         "count": 1,
-                        'sprite_path': item['img_path']
+                        'sprite_path': selected['img_path']
                     })
                 self.game_manager.bag.items_data[0]['count'] -= selected['price']
                 self.coins_count = self.game_manager.bag.items_data[0]['count']

@@ -77,11 +77,13 @@ class GameManager:
     def current_teleporter(self) -> list[Teleport]:
         return self.maps[self.current_map_key].teleporters
         
+    def get_map_scale(self, map_name: str) -> int:
+        if map_name == 'home.tmx':
+            return 2
+        return 1
+
     def scale_entities(self):
-        if self.current_map_key == 'home.tmx':
-            scale = 2
-        else:
-            scale = 1
+        scale = self.get_map_scale(self.current_map_key)
         
         if self.player:
             self.player.set_scale(scale)
@@ -91,10 +93,9 @@ class GameManager:
                 trainer.set_scale(scale)  
         if self.current_map.npc_shop:
             self.current_map.npc_shop.set_scale(scale)
+
     def get_tile_size(self): # for scale change
-        if self.current_map_key == 'home.tmx':
-            return GameSettings.TILE_SIZE * 2
-        return GameSettings.TILE_SIZE  
+        return GameSettings.TILE_SIZE * self.get_map_scale(self.current_map_key)
     
     def switch_map(self, tp: Teleport) -> None:
         if tp.destination not in self.maps:
@@ -283,6 +284,7 @@ class GameManager:
             
             #Load achievement_data
             gm.achievement = data.get("achievement", {})
+            
             #Load day data
             gm.day_time = data.get("day_time", 8.00)
         

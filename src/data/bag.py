@@ -99,6 +99,12 @@ class Bag():
                 battle_scene = scene_manager.previous_screen
                 battle_scene.action_handle.current_player = pokemon_index
                 battle_scene.players[pokemon_index].switch_animation()
+                
+                # Switch turn to enemy after changing pokemon
+                battle_scene.action_handle.previous_turn = 'player'
+                battle_scene.action_handle.current_turn = 'waiting'
+                battle_scene.action_handle.state = 'battle'
+                                
                 scene_manager.change_scene(scene_manager.previous_screen_name)
             #Item using
             self.battle_logic = scene_manager.previous_screen.battle_logic

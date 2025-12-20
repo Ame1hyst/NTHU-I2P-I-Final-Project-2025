@@ -15,7 +15,7 @@ class MenuScene(Scene):
     
     def __init__(self):
         super().__init__()
-        self.background = BackgroundSprite("krajua/start_background.jpg")
+        self.background = BackgroundSprite("krajua/start_background.png")
 
         px, py = GameSettings.SCREEN_WIDTH // 2, GameSettings.SCREEN_HEIGHT * 3 // 4
         self.play_button = Button(
@@ -28,9 +28,8 @@ class MenuScene(Scene):
             px - 150, py, 100, 100,
             lambda: scene_manager.change_scene("setting")
         )
-        large_font = resource_manager.get_font("Pokemon Solid.ttf", 150)
-        self.title_surf = large_font.render("Elemontar", True, "#132411")
-        self.title_surf1 = large_font.render("Elemontar", True, "#A94444")
+        large_font = resource_manager.get_font("Folktale.ttf", 150)
+        self.title_surf = large_font.render("Elemontar", True, "#1A0F00C7")
         self.title_rect = self.title_surf.get_rect(center= (GameSettings.SCREEN_WIDTH // 2, GameSettings.SCREEN_HEIGHT //2))
         
     @override
@@ -56,4 +55,3 @@ class MenuScene(Scene):
         self.play_button.draw(screen)
         self.setting_button.draw(screen)
         screen.blit(self.title_surf, self.title_rect)
-        screen.blit(self.title_surf1, (self.title_rect.x+10, self.title_rect.y))

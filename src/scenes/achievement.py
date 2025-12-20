@@ -133,7 +133,6 @@ class AchievementSCene(Scene):
         
         if not self.dialog.current_text:
             self.dialog.add_sequence(text)     
-        self.dialog.add_sequence(text)
 
         
     
@@ -146,6 +145,7 @@ class AchievementSCene(Scene):
 
     def render_achieve_pic(self):
         self.img_render.clear()
+        self.sheet_ani.clear()
         for achievement, data in self.achievement_data.items():
             img = resource_manager.get_image(data['sprite_path'])
             img = pg.transform.scale(img, (200, 200))

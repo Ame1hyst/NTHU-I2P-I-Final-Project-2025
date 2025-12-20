@@ -39,9 +39,7 @@ class AchieveManager:
         if not self.progress.get("unlocked", []):
             self.progress['unlocked'] = self.progress.get("unlocked", [])
         
-        achievement = self.achievement_data[trigger]
-        
-        if achievement in self.progress['unlocked']:
+        if trigger in self.progress['unlocked']:
             return False
     
         if trigger == "pham_collected":

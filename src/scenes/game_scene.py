@@ -141,6 +141,11 @@ class GameScene(Scene):
                     anim = self.online_player_animations[pid]
                     anim.position = Position(player["x"], player["y"])
                     anim.rect.topleft = (int(anim.position.x), int(anim.position.y))
+                    
+                    # Apply scale based on player's map
+                    p_map = player.get("map", "")
+                    p_scale = self.game_manager.get_map_scale(p_map)
+                    anim.set_scale(p_scale)
                 
                 # Get animation (already exists)
                 anim = self.online_player_animations[pid]
@@ -150,6 +155,12 @@ class GameScene(Scene):
                 # Target position from server
                 target_x = player["x"]
                 target_y = player["y"]
+                p_map = player.get("map", "")
+                
+                # Dynamic scale update
+                p_scale = self.game_manager.get_map_scale(p_map)
+                if getattr(anim, 'scale', 1) != p_scale:
+                    anim.set_scale(p_scale)
                 
                 # Initialize position attribute if it doesn't exist
                 if not hasattr(anim, 'position'):
@@ -243,7 +254,6 @@ class GameScene(Scene):
     @override
     def draw(self, screen: pg.Surface):
         if self.game_manager.player:
-            camera = PositionCamera(16 * GameSettings.TILE_SIZE, 30 * GameSettings.TILE_SIZE)
             camera = self.game_manager.player.camera
             self.game_manager.current_map.draw(screen, camera)
             self.achievement_manager.draw_pham(screen, camera)

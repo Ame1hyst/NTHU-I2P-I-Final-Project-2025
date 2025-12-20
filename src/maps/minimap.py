@@ -1,6 +1,6 @@
 from src.core.managers import GameManager
 from src.utils import load_tmx, Position, GameSettings, PositionCamera, Teleport
-from src.core.services import  input_manager
+from src.core.services import  input_manager, resource_manager
 from src.maps.navigation import Navigation
 import pygame as pg
 class MiniMap:
@@ -22,8 +22,12 @@ class MiniMap:
         self._cached_map_key = None
         self._base_surface = None
 
-        #Navigation setup
+        # #Navigation setup
         self.navigation = Navigation(self.game_manager)
+
+        #time font
+        self.small_font = resource_manager.get_font('Minecraft.ttf', 20)
+        self.large_font = resource_manager.get_font('Minecraft.ttf', 30)
     
     def draw(self, screen: pg.Surface):
         if not self.visible:
@@ -45,8 +49,9 @@ class MiniMap:
 
 
         if self.full_map:
-            self.navigation.render_ui(self.screen_pos, self.v_scale)            
             self.navigation.draw(screen, self.screen_pos, self.v_scale)
+        
+        self.draw_time(screen)
     
     def update(self, dt):
         self.re_build_mini_map()
@@ -131,6 +136,26 @@ class MiniMap:
         mini_pos = self.get_mini_pos(pos)
         pg.draw.rect(surf, "blue", (*mini_pos, self.tile_px, self.tile_px))
 
+    def draw_time(self, screen):
+        cycle = self.game_manager.day_night_cycle
+        hours = cycle.get_hours()
+        minutes = cycle.get_minutes()
+        state = cycle.day_state.capitalize() if cycle.day_state else "Unknown"
+        
+        font = self.small_font if not self.full_map else self.large_font
+        
+        time_str = f"{state} - {hours:02d}:{minutes:02d}"
+        time_surf = font.render(time_str, True, "white")
+        
+        pos_x = self.screen_pos[0] + 5
+        pos_y = self.screen_pos[1] + self.mini_h + 10
+        
+
+        shadow_surf = font.render(time_str, True, "black")               
+        screen.blit(shadow_surf, (pos_x + 1, pos_y + 1))
+        screen.blit(time_surf, (pos_x, pos_y))
+
+    
     def handle_state(self):
         if not (self._base_surface and self.screen_pos):
             return
@@ -149,6 +174,7 @@ class MiniMap:
             self.v_scale = self.full_v
             self.screen_pos = ((GameSettings.SCREEN_WIDTH - self.v_scale[0] -150) // 2, (GameSettings.SCREEN_HEIGHT - self.v_scale[1]) // 2)
             self.navigation = Navigation(self.game_manager)
+            self.navigation.render_ui(self.screen_pos, self.v_scale)            
         else:
             self.v_scale = self.mini_v
             self.screen_pos = (self.padding,self.padding)

@@ -130,7 +130,7 @@ class ActionHandle:
             if not pokemon.catching:  # Animation finished
                 del self.scene.enemies[self.current_enemy]
                 self.catching = False
-                self.current_enemy = None
+                self.current_enemy = self.battle_logic.get_next_pokemon(self.scene.enemies)
 
     def catch_pokemon(self):
         if not self.bush or self.battle_logic.battle_over(self.scene.players, self.scene.enemies) or self.catching:
@@ -147,6 +147,7 @@ class ActionHandle:
                     "level": catch_pokemon.level,
                 })                
                 # Start catch animation
+                catch_pokemon.animation_scale = 0
                 catch_pokemon.catching = True
                 self.catching = True
                 self.state = 'battle'
