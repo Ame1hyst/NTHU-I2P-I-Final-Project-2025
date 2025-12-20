@@ -254,7 +254,7 @@ class Bag():
         if input_manager.mouse_down(pg.BUTTON_LEFT):
             for i, rect in enumerate(self.item_rect):
                 if rect.collidepoint(input_manager.mouse_pos) and self.items_data[i]['name'].lower() == "potion" and self.items_data[i]['count'] > 0:
-                    self.potion_index = i # == "Potion" Now have only 1, in case if want more potion in the future may change
+                    self.potion_index = i #  "Potion" Now have only 1, in case if want more potion in the future may change
                     break
         
         if self.potion_index is not None:
@@ -294,8 +294,7 @@ class Bag():
     def change_pokemon(self):
         if not scene_manager.previous_screen_name == 'battle':
              return None
-
-        
+      
         if input_manager.mouse_pressed(pg.BUTTON_LEFT):
             for i, rect in enumerate(self.pokemon_rect):
                 if rect.collidepoint(input_manager.mouse_pos):

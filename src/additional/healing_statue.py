@@ -16,7 +16,7 @@ class HealStatue():
         self.dialog_rect = self.dialog_surf.get_rect(midbottom = (self.statue_rect.right, self.statue_rect.top - 5))
         self.dialog = Dialog(self.dialog_rect, (35, 10), speed=20, size=15, color="Black",)
     
-    def draw(self, screen, camera: PositionCamera):
+    def draw(self, screen, camera: PositionCamera): # base on player cam
         if not self.statue_img:
             return
 

@@ -29,11 +29,10 @@ class ChatOverlay(UIComponent):
         self._cursor_timer = 0.0
         self._cursor_visible = True
         self._just_opened = False
-        self._send_callback = send_callback
-        self._get_messages = get_messages
+        self._send_callback = send_callback # sent msg to server
+        self._get_messages = get_messages # get msg from server
         self._display_timer = 5
         self._last_seen_msg_id = -1
-
 
         try:
             self._font_msg = resource_manager.get_font("Minecraft.ttf", 14)
@@ -62,7 +61,7 @@ class ChatOverlay(UIComponent):
 
         shift = input_manager.key_down(pg.K_LSHIFT) or input_manager.key_down(pg.K_RSHIFT)
         
-        # Letters A-Z
+        # A-Z
         for k in range(pg.K_a, pg.K_z + 1):
             if input_manager.key_pressed(k):
                 ch = chr(ord('a') + (k - pg.K_a))
@@ -107,11 +106,6 @@ class ChatOverlay(UIComponent):
         if self._get_messages:
             current_msgs = self._get_messages(1) # check last one
             if current_msgs:
-                # Simple check: if content changed or count changed. 
-                # Since we don't store full state here easily without copying, 
-                # we rely on polling. Efficient enough.
-                # Actually, let's just reset timer if we are drawing.
-                # Better: In draw(), we check if messages changed.
                 pass
         
         if self.is_open:
@@ -133,6 +127,7 @@ class ChatOverlay(UIComponent):
             self._just_opened = False
         else:
             self._handle_typing()
+        
         # Cursor blink
         self._cursor_timer += dt
         if self._cursor_timer >= 0.5:
@@ -140,9 +135,9 @@ class ChatOverlay(UIComponent):
             self._cursor_visible = not self._cursor_visible
 
     def draw(self, screen: pg.Surface) -> None:
-        msgs = self._get_messages(8) if self._get_messages else []
+        msgs = self._get_messages(3) if self._get_messages else [] # get last 3 message
         
-        # Check if new message appeared to reset timer
+        # check new msg to reset timer
         if msgs:
             last_msg = msgs[-1]
             last_id = int(last_msg.get("id", -1))
@@ -150,16 +145,16 @@ class ChatOverlay(UIComponent):
                 self._display_timer = 5
                 self._last_seen_msg_id = last_id
         
-        # Draw recent messages if Open OR Timer > 0
+        # draw recent msg
         if self.is_open or self._display_timer > 0:
             sw, sh = screen.get_size()
             container_w = max(100, int((sw - 20) * 0.4))
             
-            # BOTTOM LEFT with +10 padding
+            # padding
             x = 10
             y = sh - 100
             
-            # Draw background for messages
+            # msg background
             if msgs:
                 alpha = 90 if self.is_open else 60
                 
@@ -167,7 +162,7 @@ class ChatOverlay(UIComponent):
                 bg.fill((0, 0, 0, alpha))
                 _ = screen.blit(bg, (x, y))
                 # Render last messages
-                lines = list(msgs)[-8:]
+                lines = list(msgs)[-3:]
                 draw_y = y + 8
                 for m in lines:
                     sender = str(m.get("from", ""))

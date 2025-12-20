@@ -9,7 +9,7 @@ class MiniMap:
         self.game_manager = GameManager.get_instance()
         self.mini_v = (200, 150)
         self.full_v = (600, 450)
-        self.v_scale = self.mini_v
+        self.v_scale = self.mini_v # for switching map size
 
         self.scale = scale
         self.padding = 10
@@ -19,17 +19,17 @@ class MiniMap:
         self.full_map = False
 
         self.current_map = None   
-        self._cached_map_key = None
+        self._cached_map_key = None # for checking load map
         self._base_surface = None
 
-        # #Navigation setup
+        # Navigation setup
         self.navigation = Navigation(self.game_manager)
 
         #time font
         self.small_font = resource_manager.get_font('Minecraft.ttf', 20)
         self.large_font = resource_manager.get_font('Minecraft.ttf', 30)
     
-    def draw(self, screen: pg.Surface):
+    def draw(self, screen: pg.Surface, online_players: list = None):
         if not self.visible:
             return
         
@@ -41,10 +41,12 @@ class MiniMap:
         self.draw_npc(mini_surf)
         self.draw_statue(mini_surf)
         self.draw_trainer(mini_surf)
+        if online_players:
+            self.draw_online_players(mini_surf, online_players)
         self.draw_player(mini_surf)
 
         screen.blit(mini_surf, self.screen_pos)      
-        # Border
+        # Map Border
         pg.draw.rect(screen, "#000000", (*self.screen_pos, self.mini_w, self.mini_h), 2)
 
 
@@ -60,10 +62,9 @@ class MiniMap:
         self.navigation.update(dt)
 
 
-
     def resize_map(self):
         self.current_map = self.game_manager.current_map
-        tmx = self.current_map.tmxdata
+        tmx = self.current_map.tmxdata # get tmx size
         
         self.map_width = tmx.width * GameSettings.TILE_SIZE
         self.map_height = tmx.height * GameSettings.TILE_SIZE
@@ -83,7 +84,7 @@ class MiniMap:
         #Resize 
         self._base_surface = pg.transform.smoothscale(self.current_map._surface, (self.mini_w, self.mini_h))
         
-        self._cached_map_key = self.game_manager.current_map_key # prevent cach
+        self._cached_map_key = self.game_manager.current_map_key # prevent re-updated
    
     def re_build_mini_map(self):
         if self._cached_map_key != self.game_manager.current_map_key:
@@ -94,9 +95,9 @@ class MiniMap:
     def get_mini_pos(self, pos:tuple):
         scale_x = self.v_scale[0] / self.map_width
         scale_y = self.v_scale[1] / self.map_height
-        scale = min(scale_x, scale_y)
+        scale = min(scale_x, scale_y) # for scale obj/entity
 
-        offset_x = (self.v_scale[0] - self.map_width * scale) / 2
+        offset_x = (self.v_scale[0] - self.map_width * scale) / 2 # map start + center it
         offset_y = (self.v_scale[1] - self.map_height * scale) / 2
 
         x = int(pos[0] * scale + offset_x)
@@ -119,6 +120,15 @@ class MiniMap:
         mini_pos = self.get_mini_pos(pos)
         pg.draw.circle(screen, "white", mini_pos, 5)  # border
         pg.draw.circle(screen, "black", mini_pos, 3)   # fill
+
+    def draw_online_players(self, surf, online_players: list):
+        current_map_path = self.game_manager.current_map.path_name
+        for p in online_players:
+            if p.get("map") == current_map_path: # Only when same map
+                pos = (p.get("x", 0), p.get("y", 0))
+                mini_pos = self.get_mini_pos(pos)
+                pg.draw.circle(surf, "#000000", mini_pos, 4)
+                pg.draw.circle(surf, "#F8AEF0", mini_pos, 2)
     
     def draw_npc(self, surf):
         if not self.current_map.npc_shop:

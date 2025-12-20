@@ -284,20 +284,27 @@ class GameScene(Scene):
                         cam = self.game_manager.player.camera
                         anim.draw(screen, cam, key_press=is_moving)        
         
+        # Navigation path
+        if self.game_manager.player and self.minimap.navigation:
+            self.minimap.navigation.draw_path(screen, self.game_manager.player.camera)
+        
         # Bubbles
         if self.game_manager.player:
              self._draw_chat_bubbles(screen, self.game_manager.player.camera)
         
-        self.minimap.navigation.draw_path(screen, camera)
+        # Minimap logic updates
+        online_players = []
+        if self.online_manager:
+            online_players = self.online_manager.get_list_players()
 
         if not self.minimap.full_map:
-            self.minimap.draw(screen)
+            self.minimap.draw(screen, online_players)
         
         self.cycle.draw(screen)
         
         # full map
         if self.minimap.full_map:
-            self.minimap.draw(screen)
+            self.minimap.draw(screen, online_players)
             
         if self.chat_overlay:
             self.chat_overlay.draw(screen)
@@ -357,15 +364,14 @@ class GameScene(Scene):
             self._draw_chat_bubble_for_pos(screen, camera, anim.position, text, self._font)
 
     def _draw_chat_bubble_for_pos(self, screen: pg.Surface, camera: PositionCamera, world_pos: Position, text: str, font: pg.font.Font):
-        # for camera
+        # for blit in world
         screen_pos = camera.transform_position_as_position(world_pos)
         
-        # 2. Add screen center offset (player is rendered at screen center)
-        sw, sh = screen.get_size()
+        sw, sh = screen.get_size() # CAl for find bubble offset
         center_x = sw // 2
         center_y = sh // 2
         
-        # Padding inside the bubble (around text)
+        # Padding around text
         padding_x = 6
         padding_y = 4
         
@@ -373,9 +379,9 @@ class GameScene(Scene):
         w = text_surf.get_width() + padding_x * 2
         h = text_surf.get_height() + padding_y * 2
             
-        # scene blit padding
-        bubble_x = center_x + screen_pos.x  # Right of player + 4px gap
-        bubble_y = center_y + screen_pos.y - GameSettings.TILE_SIZE 
+        # bubble blit padding
+        bubble_x = center_x 
+        bubble_y = center_y - GameSettings.TILE_SIZE 
         
         # Draw Background
         rect = pg.Rect(bubble_x, bubble_y, w, h)

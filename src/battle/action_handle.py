@@ -125,7 +125,7 @@ class ActionHandle:
     def check_catch(self):
         if not self.catching:
             return
-        
+               
         # If pokemon finished catch animation
         if self.current_enemy in self.scene.enemies:
             pokemon = self.scene.enemies[self.current_enemy]
@@ -150,6 +150,7 @@ class ActionHandle:
                     "max_hp": self.poke_info[catch_pokemon.pokemon]['stats']['max_hp'],
                     "level": catch_pokemon.level,
                 })                
+                
                 # Start catch animation
                 catch_pokemon.animation_scale = 0
                 catch_pokemon.catching = True
@@ -168,5 +169,5 @@ class ActionHandle:
         else:
             self.state = 'battle'
             self.current_turn = 'waiting'
-            self.previous_turn = 'player'
+            self.previous_turn = 'player' # Pokemon attack
             self.dialog.add_sequence(["Can not catch pokemon"], callback=self.switch_turn)

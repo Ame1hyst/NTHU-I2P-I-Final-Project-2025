@@ -132,8 +132,8 @@
       "pham_located": [
         {
           "id": 4,
-          "x": 21,
-          "y": 12
+          "x": 22,
+          "y": 5
         }
       ],
       "enemy_trainers": [
@@ -184,7 +184,7 @@
       ],
       "player": {
         "x": 12,
-        "y": 10
+        "y": 13
       },
       "pham_located": [
         {

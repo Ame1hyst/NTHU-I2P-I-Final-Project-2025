@@ -19,7 +19,7 @@ class ShopScene(Scene):
     
     def __init__(self):
         super().__init__()
-        self.background = BackgroundSprite("UI/raw/UI_Flat_Frame03a.png", size=(GameSettings.SCREEN_WIDTH*2/3, GameSettings.SCREEN_HEIGHT*3/4), cpos=(GameSettings.SCREEN_WIDTH * 1 // 5, GameSettings.SCREEN_HEIGHT* 1// 7))
+        self.background = BackgroundSprite("krajua/shop_background.png", size=(GameSettings.SCREEN_WIDTH*0.8, GameSettings.SCREEN_HEIGHT*0.9), cpos=(GameSettings.SCREEN_WIDTH * 0.1, GameSettings.SCREEN_HEIGHT* 0.05))
         self.game_manager = GameManager.get_instance()
         self.current_page = 0
         
@@ -50,25 +50,25 @@ class ShopScene(Scene):
         ),
             "x": Button(
             "UI/button_x.png", "UI/button_x_hover.png",
-            px+410, py-310, 35, 35,
+            px+385, py-270, 35, 35,
             lambda: scene_manager.change_scene(scene_manager.previous_screen_name)
         )
         }
         self.next_button =Button(
             "UI/raw/UI_Flat_Button02a_2.png", "UI/raw/UI_Flat_Button02a_1.png",
-            px+360, py+150, 40, 40,
+            px+320, py-130, 40, 40,
             lambda: self.change_page(), 
             text= ">>", size=25, color="#EA0C0C"
         )
         self.back_button = Button(
             "UI/raw/UI_Flat_Button02a_2.png", "UI/raw/UI_Flat_Button02a_1.png",
-            px+360, py+150, 40, 40,
+            px+320, py-130, 40, 40,
             lambda: self.change_page(),
             text= "<<", size=25, color="#EA0C0C"
         )
 
         self.banner = pg.transform.scale(resource_manager.get_image("UI/raw/UI_Flat_Banner04a.png"), (350, 65))
-        self.start_y = 100 # for banner
+        self.start_y = 130 # for banner
         self.banner_height = self.banner.get_height()
 
         #Buy overlay
@@ -197,7 +197,7 @@ class ShopScene(Scene):
         for i, pokemon in self.shop_pokemons.items():
             idx = int(i)
             y_pos = self.start_y + (idx * self.banner_height)
-            banner_rect = self.banner.get_rect(topleft=(300, y_pos+(idx*10)+50))
+            banner_rect = self.banner.get_rect(topleft=(250, y_pos+(idx*10)+50))
             self.pokemon_rect.append(banner_rect)
             self.draw_pokemon(screen, banner_rect, pokemon)
 
@@ -229,12 +229,12 @@ class ShopScene(Scene):
         for i, item in self.shop_items.items():
             idx = int(i)
             y_pos = self.start_y + (idx * self.banner_height*1.5)
-            banner_rect = self.banner.get_rect(topleft=(300, y_pos+(idx*10)+50))
+            banner_rect = self.banner.get_rect(topleft=(250, y_pos+(idx*10)+50))
             self.item_rect.append(banner_rect)
             self.draw_shop_item(screen, banner_rect, item)
 
     def draw_shop_item(self,screen, banner_rect, item):
-        if item['count'] < 0:
+        if item['count'] <= 0:
             banner_copy = self.banner.copy()
             banner_copy.set_alpha(128)
             screen.blit(banner_copy, banner_rect)
@@ -367,7 +367,7 @@ class ShopScene(Scene):
                     })
                 self.game_manager.bag.items_data[0]['count'] -= selected['price']
                 self.coins_count = self.game_manager.bag.items_data[0]['count']
-                selected['count'] -= 1
+                selected['count'] = max(0, selected['count'] - 1)
 
         
         auto_save.force_save()
