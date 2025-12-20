@@ -364,8 +364,8 @@
   ],
   "current_map": "map.tmx",
   "player": {
-    "x": 21.871841845922916,
-    "y": 31.08117749006095
+    "x": 17.270676190233264,
+    "y": 30.722676190233262
   },
   "bag": {
     "monsters": [
@@ -479,12 +479,12 @@
       {
         "name": "DFS Decrease",
         "count": 5,
-        "sprite_path": "ingame_ui/options2.png"
+        "sprite_path": "ingame_ui/options1.png"
       },
       {
         "name": "Attack Buff",
         "count": 5,
-        "sprite_path": "ingame_ui/options1.png"
+        "sprite_path": "ingame_ui/options2.png"
       },
       {
         "name": "Defense Buff",
@@ -519,5 +519,5 @@
     ],
     "boss_defeated": false
   },
-  "day_time": 16.782326666669444
+  "day_time": 14.732460000000785
 }

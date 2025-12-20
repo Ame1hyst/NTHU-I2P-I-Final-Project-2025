@@ -95,11 +95,11 @@ class AchieveManager:
         return pham_id in self.progress.get("pham_collected", [])
     
     def collect_pham(self, pham_id: str):
-        if not self.progress.get("pham_collected", []):
-            sound_manager.play_sound("Fruit collect 1.wav")
-            self.progress["pham_collected"] = self.progress.get("pham_collected", [])
+        if "pham_collected" not in self.progress:
+            self.progress["pham_collected"] = []
         
         if pham_id not in self.progress["pham_collected"]:
+                sound_manager.play_sound("Fruit collect 1.wav")
                 self.progress["pham_collected"].append(pham_id)
                 if self.check_unlocked("pham_collected"):
                     self.progress["unlocked"].append('pham_collected')

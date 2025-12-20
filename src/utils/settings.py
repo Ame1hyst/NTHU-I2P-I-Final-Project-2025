@@ -13,9 +13,9 @@ class Settings:
     # Audio
     MAX_CHANNELS: int = 16
     AUDIO_VOLUME: float = 0.5   # Volume of audio
-    SOUND_VOLUMN: float = AUDIO_VOLUME*2
+    SOUND_VOLUME: float = AUDIO_VOLUME*2
     # Online
-    IS_ONLINE: bool = True
+    IS_ONLINE: bool = False
     ONLINE_SERVER_URL: str = "http://localhost:8989"
     
 GameSettings = Settings()

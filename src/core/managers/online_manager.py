@@ -32,7 +32,7 @@ class OnlineManager:
         self._stop_event = threading.Event()
         self._lock = threading.Lock()
         
-        self._latest_update = None # Use single variable instead of queue
+        self._latest_update = None # Use single variable
         self._session = requests.Session() # Reuse TCP connection
         
         self._chat_out_queue = queue.Queue(maxsize=50)
@@ -52,9 +52,6 @@ class OnlineManager:
         with self._lock:
             return list(self.list_players)
 
-    # ------------------------------------------------------------------
-    # Threading and API Calling Below
-    # ------------------------------------------------------------------
     # ------------------------------------------------------------------
     # Threading and API Calling Below
     # ------------------------------------------------------------------
@@ -78,7 +75,7 @@ class OnlineManager:
         if self.player_id == -1:
             return False
         
-        # LIFO: Only keep the LATEST update
+        # Only keep the LATEST update
         with self._lock:
             self._latest_update = {
                 "x": x, 
@@ -111,41 +108,33 @@ class OnlineManager:
         self._send_thread.start()
 
     def stop(self) -> None:
-        self._stop_event.set()
-        # Do not join threads here. It causes lag on scene switch.
-        # Threads are daemon and will exit on their own when they see _stop_event.
-
-    def stop(self) -> None:
-        self._stop_event.set()
-        # Do not join threads here. It causes lag on scene switch.
-        # Threads are daemon and will exit on their own when they see _stop_event.
+        self._stop_event.set() # not join threads, let there exit on it own
 
     def _fetch_loop(self) -> None:
-        # Create thread-local session
-        session = requests.Session()
+        session = requests.Session() # create thread-local session
         
-        # Register in background if needed
+        # Register in background
         if self.player_id == -1:
             self.register(session)
         
-        # Counter to throttle chat polling (dont need 60hz)
+        
         tick = 0
         while not self._stop_event.wait(POLL_INTERVAL):
             self._fetch_players(session)
             
+            # fetch chat every 10 frames
             tick += 1
-            if tick >= 10: # Fetch chat every 10 frames (~6 times/sec)
+            if tick >= 10:
                 self._fetch_chat(session)
                 tick = 0
         
         session.close()
     
     def _send_loop(self) -> None:
-        # Create thread-local session
-        session = requests.Session()
+        session = requests.Session()  # create thread-local session
         
         while not self._stop_event.is_set():
-            # 1. Send Position
+            # Send Position
             data = None
             with self._lock:
                 if self._latest_update:
@@ -154,7 +143,7 @@ class OnlineManager:
             if data:
                 self._send_update(data, session)
             
-            # 2. Send Chat (Drain Queue)
+            # Send Chat (Drain Queue)
             try:
                 while True:
                     text = self._chat_out_queue.get_nowait()
@@ -186,8 +175,7 @@ class OnlineManager:
         }
         
         try:
-            # use session for reusing connection
-            resp = session.post(url, json=body, timeout=1.0)
+            resp = session.post(url, json=body, timeout=1.0) # use session for reusing connection
             if resp.status_code == 404:
                 # Auto-Reconnect
                 Logger.warning("PlayerID not found (404). Re-registering...")

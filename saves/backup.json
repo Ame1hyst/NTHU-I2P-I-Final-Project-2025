@@ -479,12 +479,12 @@
       {
         "name": "DFS Decrease",
         "count": 5,
-        "sprite_path": "ingame_ui/options2.png"
+        "sprite_path": "ingame_ui/options1.png"
       },
       {
         "name": "Attack Buff",
         "count": 5,
-        "sprite_path": "ingame_ui/options1.png"
+        "sprite_path": "ingame_ui/options2.png"
       },
       {
         "name": "Defense Buff",

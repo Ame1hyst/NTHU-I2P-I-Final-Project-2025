@@ -30,7 +30,7 @@ class SoundManager:
     def resume_all(self):
         pg.mixer.unpause()
         
-    def play_sound(self, filepath, volume=GameSettings.SOUND_VOLUMN):
+    def play_sound(self, filepath, volume=GameSettings.SOUND_VOLUME):
         from src.core.services import resource_manager # prevent circular import
         sound = resource_manager.get_sound(filepath)
         sound.set_volume(volume)

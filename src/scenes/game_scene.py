@@ -394,7 +394,7 @@ class GameScene(Scene):
     
     def map_sound(self):       
         if self.game_manager.current_map_key == 'home.tmx':
-            return "Gymnopédie No.1.ogg", GameSettings.AUDIO_VOLUME * 7
+            return "Cuddle Clouds.ogg", GameSettings.AUDIO_VOLUME * 5
         elif self.game_manager.current_map_key == 'gym.tmx':
             return "RBY 105 Oak Research Lab.ogg", GameSettings.AUDIO_VOLUME
         elif self.game_manager.current_map_key == 'shop.tmx':
